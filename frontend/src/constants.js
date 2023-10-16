@@ -1,0 +1,5 @@
+export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:5000/' : ''
+export const USERS_URL = 'api/user'
+export const MATERIAL_URL = 'api/master'
+export const MATERIAL_SEARCH_URL = 'api/search/:id'
+export const MATERIAL_FILTER_URL = 'api/search/filter/:id'

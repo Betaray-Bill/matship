@@ -1,0 +1,45 @@
+import mongoose from 'mongoose';
+import User from './userModel.js';
+
+// COMPANY ENTITY
+const companyEntity = mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: true,
+        },
+        type: {
+            type: String,
+            // required: true,
+        },
+        users: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'User',
+            },
+        ],
+    },{
+    timestamps:true
+})
+
+// COMPANY
+const companySchema = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+    entities: [
+       { type:String}
+    ], // Array of sub-companies/entities
+});
+  
+const Company = mongoose.model('Company', companySchema);
+const CompanyEntity = mongoose.model('CompanyEntity', companyEntity)
+export {CompanyEntity, Company}
+
+// entities: [
+//     {
+//         type: mongoose.Schema.Types.ObjectId,
+//         ref: 'companyEntity',
+//     }
+// ],

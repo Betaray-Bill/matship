@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 0px;
+  font-family: 'Poppins', sans-serif;
+  width: 100vw;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+a{
+  text-decoration: none;
+  /* color:black; */
+  font-size: 18px;
+}
+
+
+.btn{
+  padding: 8px 27px;
+  border: 1px solid black;
+  background-color: black;
+  color: white;
+  display: inline-block;border-radius: 40px;
+  transition: all 400ms ease-in-out;
+  cursor: pointer;
+  border-radius: 9px;
+}
+.btn:hover{
+  transition: all 400ms ease-in-out;
+  background-color: white;
+  color:black
+}
+
+
+/* width */
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+
+/* Track */
+
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 5px grey; */
+  border-radius: 10px;
+}
+
+
+/* Handle */
+
+::-webkit-scrollbar-thumb {
+  background: #505dd6;
+  border-radius: 10px;
+}
+
+
+/* Handle on hover */
+
+::-webkit-scrollbar-thumb:hover {
+  background: #010954;
+}
+
+
+ion-icon{
+  font-size: 26px;
+}
