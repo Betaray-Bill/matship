@@ -63,6 +63,7 @@ a{
 
 ::-webkit-scrollbar-thumb:hover {
   background: #010954;
+  width: 4px;
 }
 
 

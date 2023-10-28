@@ -2,17 +2,36 @@ import mongoose from 'mongoose';
 
 const masterSchema = mongoose.Schema(
   {
-    class: {
+    companyName:{
+      type:String
+    },
+    productName:{
+      type:String,
+      required:true,
+      unique:true
+    },
+    MasterClass: {
       type: String,
       required: true,
     },
-    subclass: {
+    subClass: {
       type: String,
       required: true,
-      unique: true,
     },
-    tensileStrength:{
-        type: Number,
+    Family:{
+        type: String,
+        required: true
+    },
+    Sustainability:{
+        type: String,
+        required: true
+    },
+    Filler:{
+        type: String,
+        required: true
+    },
+    DeliveryForm:{
+        type: String,
         required: true
     }
   }

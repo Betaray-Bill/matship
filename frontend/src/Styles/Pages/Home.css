@@ -5,6 +5,32 @@
     display: grid;
     place-items: center;
     background-color: #f3f3f3;
+    position: relative;
+}
+
+.upload_btn{
+  position: fixed;
+  z-index: 1000;
+  bottom: 0px;  
+  right: 0px;
+  margin: 3vh;
+  cursor: pointer;
+}
+
+.upload_btn ion-icon:hover{
+  transition: all 400ms ease-in-out;
+  background-color: white;
+  color: black;
+} 
+
+.upload_btn ion-icon{
+  padding: 17px 20px;
+  background-color: black;
+  color: white;
+  font-size: 28px;
+  border: 1px solid black;
+  border-radius: 8px;
+  box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
 }
 
 .home_container{
@@ -84,7 +110,7 @@
 
 .advanced_filter_wrapper form select{
     padding: 8px 27px;
-    border-radius: 12px;
+    border-radius: 8px;
     width: max-content;
     width: 15vw;
     text-align: center;

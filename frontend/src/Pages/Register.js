@@ -93,6 +93,13 @@ function Register() {
                           <span class="focus-bg"></span>
                       </div>
                       <div class="input-floating-label">
+                          <input class="input" type="text" 
+                              onChange={handleChange}
+                              name="companyEntity" placeholder="Entity" />
+                          <label for="input"><ion-icon name="mail-outline"></ion-icon> <span>companyEntity</span></label>
+                          <span class="focus-bg"></span>
+                      </div>
+                      <div class="input-floating-label">
                           <input class="input" type="Number" 
                               onChange={handleChange}
                               name="phoneNumber" placeholder="username" />

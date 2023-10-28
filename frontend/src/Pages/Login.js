@@ -17,7 +17,8 @@ function Login() {
     
     const [formData, setFormData] = useState({
         email:"",
-        password:""
+        password:"",
+        companyEntity:""
     })
 
     const handleChange = (e) => {
@@ -63,6 +64,13 @@ function Login() {
                             onChange={handleChange}
                             name="email" placeholder="username" />
                         <label for="input"><ion-icon name="mail-outline"></ion-icon> <span>Email</span></label>
+                        <span class="focus-bg"></span>
+                    </div>
+                    <div class="input-floating-label">
+                        <input class="input" type="text" value={formData.companyEntity}
+                            onChange={handleChange}
+                            name="companyEntity" placeholder="username" />
+                        <label for="input"><ion-icon name="mail-outline"></ion-icon> <span>Company Entity</span></label>
                         <span class="focus-bg"></span>
                     </div>
                     <div class="input-floating-label">

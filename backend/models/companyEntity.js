@@ -7,7 +7,7 @@ const companyEntity = mongoose.Schema(
         name: {
             type: String,
             required: true,
-        },
+        },  
         type: {
             type: String,
             // required: true,
@@ -28,6 +28,12 @@ const companySchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    Legacymaterials:[
+       { type:String }
+    ], // Array of Materials name
+    Properitarymaterials:[
+       { type:String }
+    ], // Array of Materials name
     entities: [
        { type:String}
     ], // Array of sub-companies/entities
@@ -36,10 +42,3 @@ const companySchema = new mongoose.Schema({
 const Company = mongoose.model('Company', companySchema);
 const CompanyEntity = mongoose.model('CompanyEntity', companyEntity)
 export {CompanyEntity, Company}
-
-// entities: [
-//     {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'companyEntity',
-//     }
-// ],

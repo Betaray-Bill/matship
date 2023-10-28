@@ -41,13 +41,13 @@ const addCompany = asyncHandler(async(req, res) => {
 // const addCompanyEntity
 const addCompanyEntity = asyncHandler(async(req, res) => {
     console.log("object")
-    const companyName = req.params.name;
-    const { name } = req.body; 
-    console.log(companyName, name)
+    // const companyName = req.params.name;
+    const { name, CompanyName } = req.body; 
+    // console.log(companyName, name)
 
     try{
         // Add to Company Collection
-        const company = await Company.findOne({name:companyName});
+        const company = await Company.findOne({name:CompanyName});
         console.log(company)
         if (!company) {
             return res.status(404).json({ message: 'Company not found.' });
