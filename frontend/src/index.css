@@ -19,7 +19,7 @@ a{
 }
 
 
-.btn{
+.btn, .close_btn{
   padding: 8px 27px;
   border: 1px solid black;
   background-color: black;
@@ -29,12 +29,15 @@ a{
   cursor: pointer;
   border-radius: 9px;
 }
-.btn:hover{
+.btn:hover, .close_btn:hover{
   transition: all 400ms ease-in-out;
   background-color: white;
   color:black
 }
-
+.close_btn{
+  display: flex;
+  align-items: center;
+}
 
 /* width */
 

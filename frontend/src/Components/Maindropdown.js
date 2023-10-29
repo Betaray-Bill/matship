@@ -1,0 +1,64 @@
+import React, { useEffect, useState } from 'react'
+
+
+function Maindropdown({data, name, sendToParent}) {
+
+    const [value, setvalue] = useState([]);
+    const [isDroped, setIsDroped] = useState(false);
+
+    const handleChange = (e) => {
+        const isChecked = e.target.checked;
+        const val = e.target.value; 
+
+        console.log(isChecked, val)
+        if (isChecked) {
+            setvalue((prevValue) => [...prevValue, val]);
+            sendToParent(val)
+        } else {
+            setvalue(value.filter((checkedValue) => checkedValue !== val));
+            console.log("filter", value)
+        }
+        console.log("Value",value)
+        sendToParent(val)
+    }
+
+    const resetField = () => {
+        setvalue([])
+    }
+
+
+  return (
+    <div>
+        <div className="dropdown_box">
+                <div className="dropdown_header_section">
+                   <div className="dropdown_header" onClick={() => setIsDroped(!isDroped)}>
+                            {
+                                value.length>0 ? value.join(",") : name
+                            }
+                        <div className="dropdown_icon">
+                            {
+                                isDroped ? <ion-icon name="chevron-up-outline"></ion-icon> : <ion-icon name="chevron-down-outline"></ion-icon>
+                            }
+                        </div>
+                   </div>    
+                   {
+                    isDroped ? <ion-icon name="close-outline" style={{color:"red"}} onClick={resetField}></ion-icon> : ''
+                   }
+                </div>
+
+                <div className={isDroped ? `dropdown_list` : `dropdown_list_hidden`}>
+                    {
+                        data ? Array.from(data).map((e, _i) => (
+                            <li key={_i}><input type="checkbox" value={e} onChange={(i) => handleChange(i)} />{e}</li>
+                        )) : "Loading.."
+                    }
+
+                </div>
+            </div>
+    </div>
+  )
+}
+          {/* {
+            isDroped ? <ion-icon name="close-outline" style={{color:"red"}} onClick={resetField}></ion-icon> : ''
+          } */}
+export default Maindropdown

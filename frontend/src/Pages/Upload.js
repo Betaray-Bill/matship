@@ -66,6 +66,7 @@ function Upload() {
         const data = await res.json();
         console.log(data)
         setCompanyMat(data)
+        return data
       }catch(err){
         console.log("Cannot get the materials of this company")
       }
@@ -81,6 +82,7 @@ function Upload() {
         })
         console.log("ASDasda", arr)
         await setCompanyMat(arr)
+        return data
       }catch(err){
         console.log("Cannot get the materials of this company")
       }
@@ -110,13 +112,53 @@ function Upload() {
 
   // Search Database
   const [value, setValue] = useState('')
-  const handleChange = (e) => {
-    setValue(e.target.value);
+
+  var updatedList = []
+  companyMat.forEach((i) => {
+     updatedList.push(i);
+  })
+
+  const onSearch = (e) => {
+    console.log("Com data", companyMat)
+
+    const u1 = []
+    if(e !== ''){
+      console.log("Not empty",updatedList)
+      console.log(e)
+      const u = updatedList.filter((item) => {
+        return item.toLowerCase().indexOf(e.toLowerCase()) !== -1;
+      })
+      u.forEach((i) => {
+        u1.push(i);
+      })
+
+      setCompanyMat(u1)
+    }else{
+      console.log("EMpty")
+      console.log(companyMat)
+      u1.length = 0
+      console.log(u1)
+      setCompanyMat(companyMat)
+    }
   }
+
+  const handleChange = (e) => {
+    setValue(e.target.value)
+    onSearch(e.target.value);
+  }
+
+  const handleKeyPress = (event) => {
+    console.log("object")
+    if (event.key === 'Enter') {
+      console.log("object1")
+      event.preventDefault()
+      onSearch(value);
+    }
+  };
 
   // Search Onclick
   const [clicked, setClicked] = useState(false)
-  console.log(companyMat)
+  // console.log(companyMat)
   return (
     <>
         <Nav />
@@ -155,6 +197,7 @@ function Upload() {
                           : 
                         ( isLegacyYes ? `Search ${currentUser.company}` : `Search All Materials` )} 
                         onChange={handleChange}
+                        onKeyPress={handleKeyPress}
                         onClick={(e) => setClicked(!clicked)}
                         value={value}
                     />
@@ -166,7 +209,7 @@ function Upload() {
                       <div className='suggested'>
                         {
                           companyMat && companyMat.map((e) => (
-                            <p>{e}</p>
+                            <p key={e}>{e}</p>
                           ))
                         }
                       </div>
@@ -185,8 +228,10 @@ function Upload() {
                 {
                   showElements && (
                     <>
-                      <div className="close" onClick={(e) => { setShowElements(false)}}>
-                        <ion-icon name="close-outline"></ion-icon> close
+                      <div className="close">
+                        <div className="close_btn" onClick={(e) => { setShowElements(false)}}>
+                          <ion-icon name="close-outline"></ion-icon> Close
+                        </div>
                       </div>
                       <div className="add_element_container">
                         <div className="ade_content">

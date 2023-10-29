@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../Components/Nav'
 import '../Styles/Pages/Home.css'
 import axios from 'axios';
-import Dropdown from '../Components/Dropdown';
 import { Link, useNavigate } from 'react-router-dom';
+import Maindropdown from '../Components/Maindropdown';
 
 var classSet = new Set();
 var subclassSet = new Set();
@@ -28,17 +28,12 @@ function Home() {
         try{
             const {data} = await axios.get('/api/materials/getall')
             await setDatas(data)
-            // await setreplicaData(data)
-            console.log("data", data)
 
             for (const i of data) {
                 classSet.add(i.MasterClass);
                 subclassSet.add(i.subClass)
                 familySet.add(i.Family)
             }
-            console.log(classSet)
-            console.log(subclassSet)
-            console.log(familySet)
         }catch(err){
             console.log(err)
             navigate('/pagenotfound')
@@ -55,10 +50,8 @@ function Home() {
         if(e === ''){
             alert("Enter data")
         }else{
-            console.log(typeof e)
             const {data} = await axios.get(`/api/materials/getglobalsearch/${e}`)
             await setresult(data)
-            console.log("Searcjh res",data)
             setIsSearched(true)
             scrollToResult.current.scrollIntoView({ behavior: 'smooth' });
         }
@@ -75,28 +68,34 @@ function Home() {
 
     
     // Filter Data
-    const handleFilter = async(e, name) => {
+    const handleFilter = async(e) => {
         // getAllData()
         let str = resultStr !== null ? resultStr+' '+e : e
         setresultStr(str)
-        console.log(resultStr)
         console.log("Str", str)
         const { data } = await axios.get(`api/materials/getglobalsearch/${str}`);
         await setreplicaData(data);
+        console.log(data)
         m = data
-        console.log("M", m)
-        // classSet=null
-        // subclassSet=null
-        // familySet=null
+        classSet.forEach((i) =>{
+            classSet.delete(i)
+        })
+        subclassSet.forEach((i) =>{
+            subclassSet.delete(i)
+        })
+        familySet.forEach((i) =>{
+            familySet.delete(i)
+        })
+        console.log(classSet, subclassSet, familySet)
+
         for (const i of data) {
             classSet.add(i.MasterClass);
             subclassSet.add(i.subClass)
             familySet.add(i.Family)
         }
+        console.log(classSet, subclassSet, familySet)
         setIsUsedFilter(true);
-        console.log(data);
         setresult(data)
-        console.log(result)
     }
 
     // Reset Filter
@@ -109,7 +108,6 @@ function Home() {
         setresultStr(null)
     }
     
-    console.log(m)
   return (
     <> 
         <Nav />
@@ -145,44 +143,10 @@ function Home() {
                         <h2>Advanced Filter :</h2>
 
                         <div className="advanced_filter_wrapper">
-                            <form action="">
-                                <select name="Master Class" className="search-select" onChange={(e) => {handleFilter(e.target.value, e.target.name)}}>
-                                    <option value="Master Class">Master Class</option>
-                                    {
-                                            classSet && Array.from(classSet).map((e, i) => (
-                                                <option value={e} key={i}>{e}</option>
-                                            ))
-                                        
-                                    }
-                                </select>
-                                <select name="Sub Class" className="search-select"  onChange={(e) => {handleFilter(e.target.value, e.target.value)}}>
-                                    <option value="Sub Class">Sub Class</option>
-                                    {
-                                            subclassSet && Array.from(subclassSet).map((e, i) => (
-                                                <option value={e} key={i}>{e}</option>
-                                            ))
-                                    }
-                                    {/* {
-                                        isUsedFilter ? m.map((e, i) => (
-                                            <option value={e} key={i}>{e}</option>
-                                        ))  :
-                                        classSet.size > 0 ? Array.from(subclassSet).map((e, i) => (
-                                            <option value={e} key={i}>{e}</option>
-                                        )) : <option value="No Results..">No Results..</option> 
-                                    } */}
-                                </select>
-                                {/* <select name="Supplier" className="search-select" >
-                                    <option value="Supplier">Supplier</option>
-                                    {
-                                        
-                                    }
-                                </select> */}
-                                            
-                                {/* <div className="dropdown_container">
-                                    <Dropdown data={isUsedFilter ? m : classSet }/>
-                                </div>
-                                <Dropdown data={isUsedFilter ? m : classSet }/>
-                                <Dropdown data={isUsedFilter ? m : classSet }/> */}
+                            <form>
+                                <Maindropdown data={classSet} name={"Master Class"} sendToParent={handleFilter}/>
+                                <Maindropdown data={subclassSet} name={"Sub Class"} sendToParent={handleFilter}/>
+                                <Maindropdown data={familySet} name={"Family"} sendToParent={handleFilter}/>
                             </form>
                         </div>
                         
@@ -220,6 +184,7 @@ function Home() {
                     )) : ""
                 }
                 </div> */}
+                
             </div>
         </div>
     </>
@@ -227,3 +192,42 @@ function Home() {
 }
 
 export default Home
+
+
+{/* <select name="Master Class" className="search-select" onChange={(e) => {handleFilter(e.target.value, e.target.name)}}>
+    <option value="Master Class">Master Class</option>
+    {
+            classSet && Array.from(classSet).map((e, i) => (
+                <option value={e} key={i}>{e}</option>
+            ))
+        
+    }
+</select> */}
+{/* <select name="Sub Class" className="search-select"  onChange={(e) => {handleFilter(e.target.value, e.target.value)}}>
+    <option value="Sub Class">Sub Class</option>
+    {
+            subclassSet && Array.from(subclassSet).map((e, i) => (
+                <option value={e} key={i}>{e}</option>
+            ))
+    }
+    {
+        isUsedFilter ? m.map((e, i) => (
+            <option value={e} key={i}>{e}</option>
+        ))  :
+        classSet.size > 0 ? Array.from(subclassSet).map((e, i) => (
+            <option value={e} key={i}>{e}</option>
+        )) : <option value="No Results..">No Results..</option> 
+    }
+</select> */}
+{/* <select name="Supplier" className="search-select" >
+    <option value="Supplier">Supplier</option>
+    {
+        
+    }
+</select> */}
+            
+{/* <div className="dropdown_container">
+    <Dropdown data={isUsedFilter ? m : classSet }/>
+</div>
+<Dropdown data={isUsedFilter ? m : classSet }/>
+<Dropdown data={isUsedFilter ? m : classSet }/> */}

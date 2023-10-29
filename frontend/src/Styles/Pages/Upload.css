@@ -96,7 +96,7 @@ form{
     align-items: center;
     justify-content: space-between;
     margin: 20px 0px;
-    width: 20vw;    
+    /* width: 20vw;     */
     border: 1px solid #505dd669;
     border-radius: 9px;
     padding: 10px 20px;
@@ -130,7 +130,7 @@ form{
     outline: none;
     border: none;
     font-size: 20px;
-    border: 1px solid black;
+    border: 1px solid #505dd6;
     border-radius: 9px;
     padding: 10px 20px;
     margin-top: 15px;

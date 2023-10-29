@@ -181,6 +181,7 @@
   }
   .dropdown_header input{
     outline: none;
+    border: 1px solid #505dd6;
     border: none;
   }
   .dropdown_list{
