@@ -18,6 +18,12 @@ const companyEntity = mongoose.Schema(
               ref: 'User',
             },
         ],
+        Legacymaterials:[
+            { type:String }
+        ], // Array of Materials name
+        Properitarymaterials:[  
+            { type:String }
+        ], // Array of Materials name
     },{
     timestamps:true
 })
@@ -28,12 +34,6 @@ const companySchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-    Legacymaterials:[
-       { type:String }
-    ], // Array of Materials name
-    Properitarymaterials:[
-       { type:String }
-    ], // Array of Materials name
     entities: [
        { type:String}
     ], // Array of sub-companies/entities

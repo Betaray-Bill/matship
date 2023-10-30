@@ -28,7 +28,7 @@ function Home() {
         try{
             const {data} = await axios.get('/api/materials/getall')
             await setDatas(data)
-
+            console.log(data)
             for (const i of data) {
                 classSet.add(i.MasterClass);
                 subclassSet.add(i.subClass)
@@ -64,30 +64,20 @@ function Home() {
         setvalue('')
         setresult('')
         setIsSearched(false)
+        getAllData()
     }
 
     
     // Filter Data
     const handleFilter = async(e) => {
+  
         // getAllData()
         let str = resultStr !== null ? resultStr+' '+e : e
         setresultStr(str)
         console.log("Str", str)
         const { data } = await axios.get(`api/materials/getglobalsearch/${str}`);
         await setreplicaData(data);
-        console.log(data)
         m = data
-        classSet.forEach((i) =>{
-            classSet.delete(i)
-        })
-        subclassSet.forEach((i) =>{
-            subclassSet.delete(i)
-        })
-        familySet.forEach((i) =>{
-            familySet.delete(i)
-        })
-        console.log(classSet, subclassSet, familySet)
-
         for (const i of data) {
             classSet.add(i.MasterClass);
             subclassSet.add(i.subClass)

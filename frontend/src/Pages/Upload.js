@@ -23,6 +23,7 @@ function Upload() {
     Filler:"",
     DeliveryForm:"",
     company:currentUser ? currentUser.company : "",
+    companyEntity:currentUser ? currentUser.companyEntity : "",
     isLegacy:false
   })
 
@@ -33,21 +34,25 @@ function Upload() {
       {...addData, isLegacy: isLegacyYes ? isLegacyYes : isLegacyNo}
     )
     console.log(addData)
-      try{
-        const res = await fetch("/api/materials/addMaterial", {
-          method:'POST',
-          headers:{
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(addData)
-        })
+    if(!addData.isLegacy){
+      alert("This is an unapproved material. This will be sent to Matship experts for approval. It may take 1 week");
+    }
 
-        const data = await res.json();
-        console.log(data)
+    try{
+      const res = await fetch("/api/materials/addMaterial", {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(addData)
+      })
 
-      }catch(err){
-        console.log(err)
-      }
+      const data = await res.json();
+      console.log(data)
+
+    }catch(err){
+      console.log(err)
+    }
   }
 
   const toggleShowContent = () => {
@@ -62,7 +67,7 @@ function Upload() {
       setIsLegacyNo(false)
       console.log("object", currentUser.company)
       try{
-        const res = await fetch(`/api/materials/${currentUser.company}/getAllProducts`)
+        const res = await fetch(`/api/materials/${currentUser.companyEntity}/getAllProducts`)
         const data = await res.json();
         console.log(data)
         setCompanyMat(data)
@@ -203,13 +208,14 @@ function Upload() {
                     />
                     <ion-icon name="search-outline"></ion-icon>
                   </div>
+
                   {
                     clicked ?  
                     <div className="search_suggestion">
                       <div className='suggested'>
                         {
                           companyMat && companyMat.map((e) => (
-                            <p key={e}>{e}</p>
+                            <p key={e} onClick={() => setValue(e)}>{e}</p>
                           ))
                         }
                       </div>

@@ -86,10 +86,13 @@ form{
     border-radius: 9px;
     justify-content: center;
     padding: 5px 0px;
+    position: relative;
 }
 .suggested{
     max-height: 40vh;
     overflow-x: scroll;
+    cursor: pointer;
+    /* width: 60vw; */
 }
 .legacy_search{
     display: flex;

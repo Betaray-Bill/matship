@@ -1,15 +1,15 @@
 import asyncHandler from "express-async-handler"
 import masterClass from "../models/materialsModel.js"
-import { Company } from "../models/companyEntity.js";
+import { Company, CompanyEntity } from "../models/companyEntity.js";
 
 
-// add Material - POST - /addmaterials
+// add Material - POST - /addmaterials - to Company Entity
 const addMaterial = asyncHandler(async(req, res) => {
-    const { isLegacy, MasterClass, subClass, Family, Sustainability, Filler, DeliveryForm, productName, company } = req.body;
+    const { isLegacy, MasterClass, subClass, Family, companyEntity , Sustainability, Filler, DeliveryForm, productName, company } = req.body;
 
-    const companyExists = await Company.findOne({name:company})
+    const companyEntityExists = await CompanyEntity.findOne({name:companyEntity})
 
-    if(!companyExists){
+    if(!companyEntityExists){
         res.status(500);
         throw new Error("No such Compnay Exists")
     }
@@ -21,24 +21,24 @@ const addMaterial = asyncHandler(async(req, res) => {
         Family,
         Sustainability,
         Filler,
-        DeliveryForm
+        DeliveryForm,
     })
-
     await product.save();
 
     try{
-        console.log(productName, companyExists)
+        console.log(productName, companyEntityExists)
         if(isLegacy){
-            await companyExists.Legacymaterials.push(productName);
+            await companyEntityExists.Legacymaterials.push(productName);
+            await companyEntityExists.save()
         }else{
             // check if the material already exists in Db;
 
             
 
-            await companyExists.Properitarymaterials.push(productName);
+            await companyEntityExists.Properitarymaterials.push(productName);
+            await companyEntityExists.save()
         }
-        console.log("ADDED" ,companyExists);
-        await companyExists.save()
+    
         return res.status(200).json(product)
     }catch(err){
         console.error(error);
@@ -46,10 +46,10 @@ const addMaterial = asyncHandler(async(req, res) => {
     }
 })
 
-// get data from a single company - GET - /:company/getAllProducts
+// get data from a single company - GET - /:companyEntity/getAllProducts
 const getProductCompany = asyncHandler(async(req, res) => {
     console.log(req.params.company);
-    const companyExists = await Company.findOne({name:req.params.company});
+    const companyExists = await CompanyEntity.findOne({name:req.params.company});
     if(!companyExists){
         res.status(500);
         throw new Error("No such Compnay Exists")
