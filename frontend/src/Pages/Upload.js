@@ -4,6 +4,9 @@ import '../Styles/Pages/Upload.css'
 import Dropdown from '../Components/Dropdown';
 import {Family, masterClass, subClass} from "../TypesOfMaterials.js"
 import { useSelector } from 'react-redux';
+import debounce from 'lodash/debounce';
+import axios from 'axios';
+
 
 function Upload() {
   const arr = [];
@@ -118,46 +121,34 @@ function Upload() {
   // Search Database
   const [value, setValue] = useState('')
 
-  var updatedList = []
-  companyMat.forEach((i) => {
-     updatedList.push(i);
-  })
+  // Search Material
+  const debouncedSearch = debounce(async (e) => {
+    console.log("Send", e)
+    onSearch(value)
+  }, 800);
 
-  const onSearch = (e) => {
-    console.log("Com data", companyMat)
 
-    const u1 = []
-    if(e !== ''){
-      console.log("Not empty",updatedList)
-      console.log(e)
-      const u = updatedList.filter((item) => {
-        return item.toLowerCase().indexOf(e.toLowerCase()) !== -1;
-      })
-      u.forEach((i) => {
-        u1.push(i);
-      })
-
-      setCompanyMat(u1)
-    }else{
-      console.log("EMpty")
-      console.log(companyMat)
-      u1.length = 0
-      console.log(u1)
-      setCompanyMat(companyMat)
-    }
+  const onSearch = async(e) => {
+    const {data} = await axios.get(`api/materials/getuploadsearch/${value}`);
+    console.log(data.ans)
+    setCompanyMat([])
+    data.ans.forEach((i) => {
+      setCompanyMat([...companyMat, i.productName])
+    })
   }
 
   const handleChange = (e) => {
-    setValue(e.target.value)
-    onSearch(e.target.value);
+    debouncedSearch(e.target.value);
+    // onSearch(e.target.value);
   }
 
   const handleKeyPress = (event) => {
-    console.log("object")
+
     if (event.key === 'Enter') {
-      console.log("object1")
       event.preventDefault()
-      onSearch(value);
+      if(event.target.value){
+        debouncedSearch(value)
+      }
     }
   };
 
@@ -199,9 +190,9 @@ function Upload() {
                   {/* search DB */}
                     <input type="text" 
                       placeholder={(isLegacyNo && isLegacyYes) ? 'Search Materials' 
-                          : 
+                          :  
                         ( isLegacyYes ? `Search ${currentUser.company}` : `Search All Materials` )} 
-                        onChange={handleChange}
+                        onChange={(e) => {setValue(e.target.value) }}
                         onKeyPress={handleKeyPress}
                         onClick={(e) => setClicked(!clicked)}
                         value={value}
@@ -241,7 +232,7 @@ function Upload() {
                       </div>
                       <div className="add_element_container">
                         <div className="ade_content">
-                              <Dropdown header={"Master Class"} data={masterClass} sendToParent={handleDataReceived}/>
+                              <Dropdown header={"Class"} data={masterClass} sendToParent={handleDataReceived}/>
                         </div>
                         <div className="ade_content">
                               <Dropdown header={"Sub Class"} data={receivedData && subClass[receivedData].subClass }  sendToParent={handleDataSubClass}/>

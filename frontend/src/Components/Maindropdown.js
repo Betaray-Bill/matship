@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
 
-function Maindropdown({data, name, sendToParent}) {
+function Maindropdown({data, name, sendToParent, removeFromParent}) {
 
     const [value, setvalue] = useState([]);
     const [isDroped, setIsDroped] = useState(false);
@@ -17,9 +17,11 @@ function Maindropdown({data, name, sendToParent}) {
         } else {
             setvalue(value.filter((checkedValue) => checkedValue !== val));
             console.log("filter", value)
+            // Send data to the Parent Component to remove that Unchecked Value
+            removeFromParent(val)
         }
-        console.log("Value",value)
-        sendToParent(val)
+        // console.log("Value",value)
+        // sendToParent(val)
     }
 
     const resetField = () => {
@@ -48,7 +50,7 @@ function Maindropdown({data, name, sendToParent}) {
 
                 <div className={isDroped ? `dropdown_list` : `dropdown_list_hidden`}>
                     {
-                        data ? Array.from(data).map((e, _i) => (
+                        data ? data.map((e, _i) => (
                             <li key={_i}><input type="checkbox" value={e} onChange={(i) => handleChange(i)} />{e}</li>
                         )) : "Loading.."
                     }

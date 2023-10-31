@@ -21,7 +21,7 @@
 }
 .upload_container{
     position: relative;
-    width: 80vw;
+    width: 60vw;
     /* background-color: #505dd6; */
     padding: 20px;  
     display: grid;
@@ -60,7 +60,7 @@ form{
 
 .search_suggestion{
     position: absolute;
-    min-width: 20vw;
+    /* min-width: 20vw; */
     text-align: center;    
     background-color: white;
     border: 1px solid black;
@@ -120,7 +120,7 @@ form{
     transition: all 400ms ease-in-out;
     margin: 40px 0px;
     display: grid;
-    width: 70vw;
+    /* width: 70vw; */
     grid-template-columns: repeat(3,minmax(0,1fr));
     grid-gap: 25px;
     border: 1px solid #505dd669;

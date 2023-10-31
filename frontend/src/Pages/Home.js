@@ -10,6 +10,13 @@ var subclassSet = new Set();
 var familySet = new Set();
 var m= []
 
+
+var Class = []
+var SubClass = []
+var FamilyClass = []
+
+
+
 function Home() {
     const scrollToResult = useRef();
 
@@ -33,7 +40,21 @@ function Home() {
                 classSet.add(i.MasterClass);
                 subclassSet.add(i.subClass)
                 familySet.add(i.Family)
+
+                if(!Class.includes(i.MasterClass)){
+                    Class.push(i.MasterClass)
+                }
+                
+                if(!SubClass.includes(i.subClass)){
+                    SubClass.push(i.subClass)
+                }
+                
+                if(!FamilyClass.includes(i.Family)){
+                    FamilyClass.push(i.Family)
+                }
             }
+
+            console.log(Class, SubClass, FamilyClass)
         }catch(err){
             console.log(err)
             navigate('/pagenotfound')
@@ -42,7 +63,7 @@ function Home() {
 
     useEffect(() => {
         getAllData()
-    }, [result])
+    }, [])
 
 
     // Global Search
@@ -60,6 +81,14 @@ function Home() {
         await fetchSearch(value)
     }
 
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault()
+            fetchSearch(value);
+        }
+    }
+
+
     const resetSearch = async() =>{
         setvalue('')
         setresult('')
@@ -67,21 +96,44 @@ function Home() {
         getAllData()
     }
 
+    // Remove Unchecked Value
+    const handleRemove = (e) => {
+        handleFilter(e, "Remove")
+    }
     
     // Filter Data
-    const handleFilter = async(e) => {
-  
+    const handleFilter = async(e, type) => {
         // getAllData()
         let str = resultStr !== null ? resultStr+' '+e : e
         setresultStr(str)
         console.log("Str", str)
+        if(type === "Remove"){
+            str = resultStr.replace(e, "").trim();
+        }
+
         const { data } = await axios.get(`api/materials/getglobalsearch/${str}`);
         await setreplicaData(data);
+        console.log(data)
         m = data
+        Class.length = 0
+        SubClass.length = 0
+        FamilyClass.length = 0
         for (const i of data) {
             classSet.add(i.MasterClass);
             subclassSet.add(i.subClass)
             familySet.add(i.Family)
+
+            if(!Class.includes(i.MasterClass)){
+                Class.push(i.MasterClass)
+            }
+            
+            if(!SubClass.includes(i.subClass)){
+                SubClass.push(i.subClass)
+            }
+            
+            if(!FamilyClass.includes(i.Family)){
+                FamilyClass.push(i.Family)
+            }
         }
         console.log(classSet, subclassSet, familySet)
         setIsUsedFilter(true);
@@ -96,6 +148,7 @@ function Home() {
         setresult([])
         setIsUsedFilter(false);
         setresultStr(null)
+        getAllData()
     }
     
   return (
@@ -117,7 +170,10 @@ function Home() {
                         <h2>Global Search</h2>
                         <div className="globalSearch_container">
                             <ion-icon name="search-outline"></ion-icon>
-                            <input type="text" value={value} onChange={(e) => setvalue(e.target.value)} name="" placeholder='Search the materials..' />
+                            <input type="text" value={value} 
+                                onChange={(e) => setvalue(e.target.value)} 
+                                onKeyPress={handleKeyPress}
+                                name="" placeholder='Search the materials..' />
                             {
                                 isSearched ? <ion-icon name="close-outline" onClick={resetSearch}></ion-icon> : ""
                             }
@@ -134,9 +190,9 @@ function Home() {
 
                         <div className="advanced_filter_wrapper">
                             <form>
-                                <Maindropdown data={classSet} name={"Master Class"} sendToParent={handleFilter}/>
-                                <Maindropdown data={subclassSet} name={"Sub Class"} sendToParent={handleFilter}/>
-                                <Maindropdown data={familySet} name={"Family"} sendToParent={handleFilter}/>
+                                <Maindropdown data={Class} name={"Master Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown data={SubClass} name={"Sub Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown data={FamilyClass} name={"Family"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
                             </form>
                         </div>
                         
@@ -162,18 +218,6 @@ function Home() {
                     ))
                 }
                 </div>
-
-                {/* <div className="output">
-                {
-                    isUsedFilter ?  m && m.map((e, _i) => (
-                        <div key={_i}>
-                            <h2>{e.class}</h2>
-                            <p>{e.subclass}</p>
-                            <p>{e.tensileStrength}</p>
-                        </div>
-                    )) : ""
-                }
-                </div> */}
                 
             </div>
         </div>

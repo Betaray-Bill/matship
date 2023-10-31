@@ -95,8 +95,85 @@ const getGlobalSearch =asyncHandler( async(req, res) => {
     console.log(ans)
 
     res.status(200).json(ans)
+})
+
+
+
+
+// Get Result from the Upload Section Search - Return Suggestions and Result
+
+const getUploadSearch = asyncHandler(async(req, res) => {
+    // const query = req.params.value;
+    console.log("req.query.value", req.params.value)
+
+    const ans = await masterClass.aggregate([
+        {
+            $search: {
+            index: "masterclasses",
+            text: {
+                    query: req.params.value,
+                    path: {
+                            wildcard: "*"
+                        },
+                }
+            }
+        }
+    ])
+
+    const suggestions  = await Array.from(ans).map((e) => e.name)
+
+    res.status(200).json({
+        ans, suggestions
+    })
 
 })
 
 
-export { getGlobalSearch, getAllData, addMaterial, getProductCompany}
+export { getGlobalSearch, getAllData, addMaterial, getProductCompany, getUploadSearch}
+
+
+
+// const query = req.query.value;
+//     console.log("req.query.value", req.query.value)
+//     const ans = await masterClass.find({ 
+//         name: { 
+//             $regex: new RegExp(`^${query}`, 'i') 
+//         } 
+//     })
+
+//     const suggestions  = await Array.from(ans).map((e) => e.name)
+
+//     res.status(200).json({
+//         ans, suggestions
+//     })
+
+
+
+
+
+
+
+
+
+// const query = req.params.value;
+//     console.log("req.query.value", req.params.value)
+
+//     const ans = await masterClass.aggregate([
+//         {
+//             $search: {
+//             index: "masterclasses",
+//             text: {
+//                 query: req.params.value,
+//                 path: {
+//                     wildcard: "*"
+//                     }
+//                 }
+//             }
+//         }
+//     ])
+
+//     const suggestions  = await Array.from(ans).map((e) => e.name)
+
+//     res.status(200).json({
+//         ans, suggestions
+//     })
