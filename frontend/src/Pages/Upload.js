@@ -60,6 +60,7 @@ function Upload() {
 
   const toggleShowContent = () => {
     setShowElements((p) => !p)
+    setClicked(!clicked)
   }
 
   const [companyMat, setCompanyMat] = useState([])
@@ -125,7 +126,7 @@ function Upload() {
   const debouncedSearch = debounce(async (e) => {
     console.log("Send", e)
     onSearch(value)
-  }, 800);
+  }, 100);
 
 
   const onSearch = async(e) => {
@@ -133,7 +134,7 @@ function Upload() {
     console.log(data.ans)
     setCompanyMat([])
     data.ans.forEach((i) => {
-      setCompanyMat([...companyMat, i.productName])
+      setCompanyMat((p) => [...p, i.productName])
     })
   }
 
@@ -154,14 +155,25 @@ function Upload() {
 
   // Search Onclick
   const [clicked, setClicked] = useState(false)
-  // console.log(companyMat)
+
+  //get Single Product
+  const getSingleProduct = async(e) => {
+    setValue(e)
+    const {data} = await axios.get(`api/materials/getsinglematerial/${e}`);
+    console.log(data)
+    // setClicked(!clicked)
+    setShowElements((p) => !p)
+    setAddData(data.getMaterial)
+    console.log(addData)
+  }
   return (
     <>
         <Nav />
         <div className="upload_wrapper">
           <div className="upload_container">
               <div className="upload_header">
-                <h2>Base Material Info</h2>
+                <p>Base Material Info</p>
+                <div className="hr"></div>
               </div>
               <form action="">
                 {/* Legacy Data */}
@@ -206,7 +218,7 @@ function Upload() {
                       <div className='suggested'>
                         {
                           companyMat && companyMat.map((e) => (
-                            <p key={e} onClick={() => setValue(e)}>{e}</p>
+                            <p key={e} onClick={()=>getSingleProduct(e)}>{e}</p>
                           ))
                         }
                       </div>
@@ -253,19 +265,19 @@ function Upload() {
                         }
                         <div className="ade_content_input">
                           <label htmlFor="">Product Name</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, productName:e.target.value})} name="productName" placeholder=''/>
+                          <input type="text" onChange={(e) => setAddData({...addData, productName:e.target.value})} value={addData.productName && addData.productName} name="productName" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Sustainability</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, Sustainability:e.target.value})} name="Sustainability" placeholder=''/>
+                          <input type="text" onChange={(e) => setAddData({...addData, Sustainability:e.target.value})} value={addData.Sustainability && addData.Sustainability} name="Sustainability" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Filler</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, Filler:e.target.value})} name="Filler" placeholder=''/>
+                          <input type="text" onChange={(e) => setAddData({...addData, Filler:e.target.value})} value={addData.Filler && addData.Filler} name="Filler" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Delivery form</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} name="Delivery form" placeholder=''/>
+                          <input type="text" onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} value={addData.DeliveryForm && addData.DeliveryForm} name="Delivery form" placeholder=''/>
                         </div>
                         {
                           isLegacyNo ? 

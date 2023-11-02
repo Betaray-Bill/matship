@@ -3,6 +3,22 @@ import masterClass from "../models/materialsModel.js"
 import { Company, CompanyEntity } from "../models/companyEntity.js";
 
 
+// get Single Product - GET - /getsingleproduct - Search Materials DB
+const getSingleMaterial = asyncHandler(async(req, res) => {
+    const query = req.params.material;
+    console.log(query)
+    try{
+        const getMaterial = await masterClass.findOne({
+            productName:query
+        })
+        console.log(getMaterial)
+        res.status(200).json({getMaterial})
+    }catch(error){
+        console.error(error);
+        return res.status(500).json({ error: 'Error fetching the product' });
+    }
+})
+
 // add Material - POST - /addmaterials - to Company Entity
 const addMaterial = asyncHandler(async(req, res) => {
     const { isLegacy, MasterClass, subClass, Family, companyEntity , Sustainability, Filler, DeliveryForm, productName, company } = req.body;
@@ -129,7 +145,7 @@ const getUploadSearch = asyncHandler(async(req, res) => {
 })
 
 
-export { getGlobalSearch, getAllData, addMaterial, getProductCompany, getUploadSearch}
+export { getGlobalSearch, getAllData, addMaterial, getProductCompany, getUploadSearch, getSingleMaterial}
 
 
 
