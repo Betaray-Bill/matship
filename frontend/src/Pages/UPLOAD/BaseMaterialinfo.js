@@ -3,12 +3,14 @@ import Nav from './../../Components/Nav.js'
 import '../../Styles/Pages/Upload.css'
 import Dropdown from './../../Components/Dropdown';
 import {Family, masterClass, subClass} from "../../TypesOfMaterials.js"
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
+import { uploadbaseInfo } from '../../features/uploadSlice.js';
 
 function BaseMaterialinfo() {
-    const scrollToResult = useRef();
+  const dispatch = useDispatch()
+  const scrollToResult = useRef();
   const arr = [];
   
   const [showElements, setShowElements] = useState(false)
@@ -71,7 +73,7 @@ function BaseMaterialinfo() {
       DeliveryForm:"",
       company:currentUser ? currentUser.company : "",
       companyEntity:currentUser ? currentUser.companyEntity : "",
-      isLegacy:false
+      isLegacy:isLegacyYes ? isLegacyYes : isLegacyNo
     })
     console.log(addData)
   }
@@ -188,6 +190,15 @@ function BaseMaterialinfo() {
     setIsNextTestStandard(true);
     scrollToResult.current.scrollIntoView({ behavior: 'smooth' });
   }
+  // Save to Redux
+  const saveData = async() => {
+    await dispatch(uploadbaseInfo(addData))
+  }
+
+  const clearData = () => {
+    setShowElements(false)
+    setAddData({})
+  }
 
   return (
     <>
@@ -195,7 +206,7 @@ function BaseMaterialinfo() {
         <div className="upload_wrapper">
           <div className="upload_container">
               <div className="upload_header">
-                <p>Base Material Info</p>
+                <p>1. Base Material Info</p>
                 <div className="hr"></div>
               </div>
               <form action="">
@@ -261,8 +272,8 @@ function BaseMaterialinfo() {
                   showElements && (
                     <>
                       <div className="close">
-                        <div className="close_btn" onClick={(e) => { setShowElements(false)}}>
-                          <ion-icon name="close-outline"></ion-icon> Close
+                        <div className="close_btn" onClick={clearData}>
+                          <ion-icon name="close-outline"></ion-icon> Clear
                         </div>
                       </div>
                       <div className="add_element_container">
@@ -316,8 +327,12 @@ function BaseMaterialinfo() {
                 }
 
               </form>
+
               <div className="next">
-                <div className="btn" onClick={nextTestStandard} ref={scrollToResult}>Next</div>
+                <div className="btn" onClick={saveData}>
+                  Save
+                </div>
+                {/* <div className="btn" onClick={nextTestStandard} ref={scrollToResult}>Next</div> */}
               </div>
           </div>
 

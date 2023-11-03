@@ -85,7 +85,7 @@
 
 .upload_header{
     width:60vw;
-    border-bottom: 1px solid #505dd6aa;
+    /* border-bottom: 1px solid #505dd6aa; */
 }
 .upload_header p{
     font-size: 24px;
@@ -209,4 +209,19 @@ form{
 .add_element_container label{
     font-weight: 700;
     font-size: 20px;
+}
+
+
+
+
+/* ---------TEST STANDARD ----------- */
+
+.testStandard_dropdown select{
+    padding: 8px 20px;
+    font-size: 20px;
+    border-radius: 12px;
+}
+
+.testStandard_dropdown select option{
+    margin: 12px 0px;
 }
