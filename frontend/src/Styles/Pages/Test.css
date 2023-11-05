@@ -3,4 +3,92 @@
     border: 1px solid #505dd6ac;
     margin: 5vh 0px;
     border-radius: 12px;
+    padding: 20px;
+    text-align: left;
+}
+
+.test_container .test_header p{
+    font-weight: bold;
+    font-size: 22px;
+}
+
+.test_container .test_header p span{
+    font-weight: 500;
+    margin-left: 12px;
+}
+
+.test_header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: max-content;
+}
+
+.test_header p{
+    margin-left: 20px;
+    color: rgb(32,33,36);;
+}
+.test_wrapper{
+    text-align: left;
+}
+
+.test_content_item{
+    margin: 20px 0px;
+    padding-top: 15px;
+    /* padding-bottom: 16px; */
+    border-top: 1px solid #505dd633;
+}
+
+.content_item{
+    padding-top: 15px;
+    width: max-content;
+    /* padding: 15px 20px; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.content_item span{
+    font-size: 18px;
+    padding: 10px;
+
+    /* font-weight: 600; */
+}
+
+.content_item span input{
+    padding: 8px 20px;
+    width: 50px;
+    border-radius: 9px;
+    margin-left: 20px;
+    outline: none;
+    border: none;
+    font-size: 20px;
+    border: 1px solid #000;
+    text-align: center;
+}
+
+.add{
+    display: flex;
+    align-items: center;
+}
+
+.add ion-icon{
+    padding-left: 12px;
+}
+
+.test_content_item span{
+    display: flex;
+    align-items: center;
+}
+
+.test_content_item span input{
+    padding: 8px 20px;
+    width: 50px;
+    border-radius: 9px;
+    margin-left: 20px;
+    outline: none;
+    border: none;
+    font-size: 20px;
+    border: 1px solid #000;
+    text-align: center;
 }

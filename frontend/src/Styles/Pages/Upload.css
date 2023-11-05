@@ -84,7 +84,7 @@
 }
 
 .upload_header{
-    width:60vw;
+    /* width:60vw; */
     /* border-bottom: 1px solid #505dd6aa; */
 }
 .upload_header p{
@@ -216,12 +216,12 @@ form{
 
 /* ---------TEST STANDARD ----------- */
 
-.testStandard_dropdown select{
+select{
     padding: 8px 20px;
     font-size: 20px;
-    border-radius: 12px;
+    border-radius: 9px;
 }
 
-.testStandard_dropdown select option{
+select option{
     margin: 12px 0px;
 }
