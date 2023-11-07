@@ -33,19 +33,39 @@ function ISO527() {
   }
 
   const [temperature, setTemperature] = useState([]);
+  const [isCreateClicked, setisCreateClicked] = useState(false);
+
+  console.log(temperature)
+  // const [inputValues, setInputValues] = useState([]);
+  const createInputTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            <p>D{i+1}</p>
+            <input 
+              key={i} type="Number" onChange={(event) => {
+                setTemperature((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            />
+        </div>
+      );
+    }
+    return inputTags;
+  };
 
   const createDataset = () => {
     if(numberOfDataSets > 0){
       console.log(numberOfDataSets)
-      for(let i=0; i<numberOfDataSets; i++){
-        setTemperature([...temperature, temperature[i]=0])
-      }
-      // console.log(temp)
-      // setTemperature(temp)
+      setisCreateClicked((p)=>!p)
+
     }
   }
-
-  console.log(temperature)
+  // console.log(inputValues)
   return (
     <>
         <div className="test_container">
@@ -135,23 +155,21 @@ function ISO527() {
                   </div>
                 )
               }
-
-              {
-                numberOfDataSets >0 ? (
-                  <div className="test_content_item">
-                  {
-                    temperature.map((e, _i) => (
-                      <div key={_i}>
-                        <p>D{_i+1}</p>
-                        <input type="number" onChange={(i) => setTemperature([ temperature[_i]=i.target.value])}/>
-                      </div>
-                    ))
-                  }
-                  </div>
-                ) : ""
-              }
             </div>
         </div>
+
+        {
+          isCreateClicked > 0 ? 
+          (
+            <div className="test_container">
+              <div className="test_container_box">
+                <h3>1.Temperature(c)</h3>
+                {isCreateClicked ? createInputTags() : ""}
+              </div>
+            </div>
+          ):""
+        }
+
     </>
   )
 }

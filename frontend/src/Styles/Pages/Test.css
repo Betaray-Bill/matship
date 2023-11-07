@@ -92,3 +92,25 @@
     border: 1px solid #000;
     text-align: center;
 }
+.test_container_box{
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    /* background-color: aqua; */
+    overflow-x: scroll;
+}
+.test_data_box{
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    margin: 0px 20px;
+}
+
+.test_data_box input{
+    padding: 8px 20px;
+    width: 50px;
+    border-radius: 9px;
+    outline: none;
+    border: none;
+    border: 1px solid #000;
+}

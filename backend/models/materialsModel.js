@@ -33,6 +33,18 @@ const masterSchema = mongoose.Schema(
     DeliveryForm:{
         type: String,
         required: true
+    },
+    SpecimenType:{
+      type: String,
+      required: true
+    },
+    h:{
+      type:Number,
+      required:true
+    },
+    L0:{
+      type:Number,
+      required:true
     }
   }
 );
