@@ -1,7 +1,10 @@
 import React, { Children, useEffect, useState } from 'react'
 import "../../../Styles/Pages/Test.css"
+import { useDispatch } from 'react-redux'
+import { testStandardInfo } from '../../../features/uploadSlice'
 
 function ISO527() {
+  const dispatch = useDispatch()
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
   const [specimenClicked, setSpecimenClicked] = useState(false)
   const [testData, setTestData] = useState({
@@ -9,6 +12,8 @@ function ISO527() {
     SpecimenType:"",
     L0:0,
     h:0,
+    temp:[],
+    conditioned:[]
   });
 
   useEffect(() => {
@@ -32,12 +37,12 @@ function ISO527() {
     }
   }
 
-  const [temperature, setTemperature] = useState([]);
   const [isCreateClicked, setisCreateClicked] = useState(false);
 
+  // Create Temperature Input Fields
+  const [temperature, setTemperature] = useState([]);
   console.log(temperature)
-  // const [inputValues, setInputValues] = useState([]);
-  const createInputTags = () => {
+  const createTemperatureTags = () => {
     const inputTags = [];
     for (let i = 0; i < numberOfDataSets; i++) {
       inputTags.push(
@@ -58,6 +63,36 @@ function ISO527() {
     return inputTags;
   };
 
+  // console.log(object)
+
+  // Create Conditioned Input Fields
+  const [conditioned, setConditioned] = useState([]);
+  const createConditionedTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            {/* <p>D{i+1}</p> */}
+            <select 
+              key={i} type="Number" onChange={(event) => {
+                setConditioned((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            >
+              <option value="DAM">DAM</option>
+              <option value="RH50">RH50</option>
+            </select>
+        </div>
+      );
+    }
+    return inputTags;
+  }
+
+  console.log(conditioned)
+
   const createDataset = () => {
     if(numberOfDataSets > 0){
       console.log(numberOfDataSets)
@@ -65,7 +100,22 @@ function ISO527() {
 
     }
   }
-  // console.log(inputValues)
+
+  const uploadDataToRedux = async() => {
+    console.log("qwe",testData)
+    await dispatch(testStandardInfo(testData))
+
+  }
+
+
+  const saveData = async() => {
+    await setTestData({...testData, temp:temperature})
+    await setTestData({...testData, conditioned:conditioned})
+    console.log(testData)
+    uploadDataToRedux()
+  }
+  console.log(testData)
+  
   return (
     <>
         <div className="test_container">
@@ -152,6 +202,9 @@ function ISO527() {
                     <div className="btn" onClick={createDataset}>
                       Create Datasets
                     </div>
+                    <div className="skip">
+                      Skip To add Processed data <ion-icon name="arrow-forward-outline"></ion-icon>
+                    </div>
                   </div>
                 )
               }
@@ -159,17 +212,28 @@ function ISO527() {
         </div>
 
         {
-          isCreateClicked > 0 ? 
+          isCreateClicked ? 
           (
             <div className="test_container">
               <div className="test_container_box">
                 <h3>1.Temperature(c)</h3>
-                {isCreateClicked ? createInputTags() : ""}
+                {isCreateClicked ? createTemperatureTags() : ""}
+              </div>
+
+              <div className="test_container_box">
+                <h3>2.Conditioned</h3>
+                {isCreateClicked ? createConditionedTags() : ""}
               </div>
             </div>
           ):""
         }
 
+
+        <div className="next">
+            <div className="btn" onClick={saveData}>
+            Save
+          </div>
+        </div>
     </>
   )
 }
