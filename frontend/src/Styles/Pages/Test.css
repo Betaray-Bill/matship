@@ -7,6 +7,12 @@
     text-align: left;
 }
 
+@media(max-width:1124px){
+    .test_container{
+        width: 85vw;
+    }
+}
+
 .test_container .test_header p{
     font-weight: bold;
     font-size: 22px;
@@ -84,6 +90,8 @@
 .test_content_item span input{
     padding: 8px 20px;
     width: 50px;
+    outline: none;
+    border: none;
     border-radius: 9px;
     margin-left: 20px;
     outline: none;
@@ -97,7 +105,6 @@
     justify-content: space-between;
     align-items: center;
     /* background-color: aqua; */
-    overflow-x: scroll;
 }
 .test_data_box{
     display: flex;
@@ -117,7 +124,31 @@
 .test_container_box{
     border-bottom:1px solid #505dd633;
     margin-bottom: 30px;
+    display: flex;
+    align-items: center;
 }
+.test_container_box p{
+    width: 20vw;
+    display: flex;
+    /* background-color: #505dd6; */
+    align-items: center;
+    /* font-weight: 600; */
+}
+
+.test_container_box p ion-icon{
+    margin: 0px 12px;
+}
+.test_container_inputs{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding: 12px 0px;
+    /* background-color: antiquewhite; */
+    width: 60vw;
+    overflow-x: scroll;
+}
+
 .skip{
     display: flex;
     padding: 20px 0px;
@@ -136,3 +167,23 @@
     /* transform: translateX(10px) */
 }
 
+.input_name{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.input_name label{
+    margin: 0px 20px;
+    font-weight: 600;
+}
+
+.test_container_inputs::-webkit-scrollbar{
+    height:  7px;
+    margin: 12px;
+}
+
+
+.test_container_inputs::-webkit-scrollbar-track {
+    border-radius:10px;
+  }

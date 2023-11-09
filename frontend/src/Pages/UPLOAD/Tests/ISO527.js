@@ -8,12 +8,16 @@ function ISO527() {
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
   const [specimenClicked, setSpecimenClicked] = useState(false)
   const [testData, setTestData] = useState({
-    testStandar:"ISO527",
+    testStandard:"ISO527",
     SpecimenType:"",
     L0:0,
     h:0,
     temp:[],
-    conditioned:[]
+    conditioned:[],
+    NumberOf_Specimens:[],
+    CrossHeadSpeed:[],
+    x_axis:[],
+    y_axis:[]
   });
 
   useEffect(() => {
@@ -41,13 +45,13 @@ function ISO527() {
 
   // Create Temperature Input Fields
   const [temperature, setTemperature] = useState([]);
-  console.log(temperature)
+ 
   const createTemperatureTags = () => {
     const inputTags = [];
     for (let i = 0; i < numberOfDataSets; i++) {
       inputTags.push(
         <div key={i} className='test_data_box'>
-            <p>D{i+1}</p>
+            {/* <p>D{i+1}</p> */}
             <input 
               key={i} type="Number" onChange={(event) => {
                 setTemperature((prevInputValues) => {
@@ -62,8 +66,6 @@ function ISO527() {
     }
     return inputTags;
   };
-
-  // console.log(object)
 
   // Create Conditioned Input Fields
   const [conditioned, setConditioned] = useState([]);
@@ -82,6 +84,7 @@ function ISO527() {
                 });
               }} 
             >
+              <option value=""></option>
               <option value="DAM">DAM</option>
               <option value="RH50">RH50</option>
             </select>
@@ -91,30 +94,139 @@ function ISO527() {
     return inputTags;
   }
 
-  console.log(conditioned)
+  // Create No of Specimens
+  const [noOfSpecimens, setNoOfSpecimens] = useState([])
+  const  createNoOfSpecimensTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            <input 
+              key={i} type="Number" onChange={(event) => {
+                setNoOfSpecimens((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            />
+        </div>
+      );
+    }
+    return inputTags;
+  }
+
+  // Cross Head
+  const [crossHeads, setCrossHeads] = useState([]);
+  const createCrossheadTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            <input 
+              key={i} type="Number" onChange={(event) => {
+                setCrossHeads((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            />
+        </div>
+      );
+    }
+    return inputTags;
+  }
+
+  // Create X Axis Fields
+  const [x_axis, setX_axis] = useState([]);
+  const createX_axisTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            {/* <p>D{i+1}</p> */}
+            <select 
+              key={i} type="text" onChange={(event) => {
+                setX_axis((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            >
+              <option value=""></option>
+              <option value="Strain (%)">Strain (%)</option>
+              <option value="Eng Stress (MPa)">Eng Stress (MPa)</option>
+            </select>
+        </div>
+      );
+    }
+    return inputTags;
+  }
+
+  // Create X Axis Fields
+  const [y_axis, setY_axis] = useState([]);
+  const createY_axisTags = () => {
+    const inputTags = [];
+    for (let i = 0; i < numberOfDataSets; i++) {
+      inputTags.push(
+        <div key={i} className='test_data_box'>
+            {/* <p>D{i+1}</p> */}
+            <select 
+              key={i} type="text" onChange={(event) => {
+                setY_axis((prevInputValues) => {
+                  const newInputValues = [...prevInputValues];
+                  newInputValues[i] = event.target.value;
+                  return newInputValues;
+                });
+              }} 
+            >
+              <option value=""></option>
+              <option value="Strain (%)">Strain (%)</option>
+              <option value="Eng Stress (MPa)">Eng Stress (MPa)</option>
+            </select>
+        </div>
+      );
+    }
+    return inputTags;
+  }
+
 
   const createDataset = () => {
     if(numberOfDataSets > 0){
-      console.log(numberOfDataSets)
       setisCreateClicked((p)=>!p)
-
     }
   }
 
-  const uploadDataToRedux = async() => {
-    console.log("qwe",testData)
-    await dispatch(testStandardInfo(testData))
-
-  }
-
-
   const saveData = async() => {
-    await setTestData({...testData, temp:temperature})
-    await setTestData({...testData, conditioned:conditioned})
-    console.log(testData)
-    uploadDataToRedux()
+    await dispatch(testStandardInfo(testData))
   }
-  console.log(testData)
+
+
+  useEffect(() => {
+    setTestData({...testData, temp:temperature})
+  },[ temperature])
+
+  useEffect(() => {
+    setTestData({...testData, NumberOf_Specimens:noOfSpecimens})
+  },[ noOfSpecimens])
+
+  useEffect(() => {
+    setTestData({...testData, conditioned:conditioned})
+  },[ conditioned])
+
+  useEffect(() => {
+    setTestData({...testData, CrossHeadSpeed:crossHeads})
+  },[crossHeads])
+
+  useEffect(() => {
+    setTestData({...testData, x_axis:x_axis})
+  },[ x_axis])
+
+  useEffect(() => {
+    setTestData({...testData, y_axis:y_axis})
+  },[ y_axis])
   
   return (
     <>
@@ -215,15 +327,59 @@ function ISO527() {
           isCreateClicked ? 
           (
             <div className="test_container">
-              <div className="test_container_box">
-                <h3>1.Temperature(c)</h3>
-                {isCreateClicked ? createTemperatureTags() : ""}
-              </div>
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon> Temperature(c)</p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ? createTemperatureTags() : ""}
+                  </div>
+                </div>
+              </>
 
-              <div className="test_container_box">
-                <h3>2.Conditioned</h3>
-                {isCreateClicked ? createConditionedTags() : ""}
-              </div>
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon> Conditioned</p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ? createConditionedTags() : ""}
+                  </div>
+                </div>
+              </>
+
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon>Number of Specimens / Dataset </p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ? createNoOfSpecimensTags() : ""}
+                  </div>
+                </div>
+              </>
+
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon>Crosshead Speed (mm/min)</p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ? createCrossheadTags() : ""}
+                  </div>
+                </div>
+              </>
+
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon>X-Axis</p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ?  createX_axisTags() : ""}
+                  </div>
+                </div>
+              </>
+
+              <>
+                <div className="test_container_box">
+                  <p><ion-icon name="add-outline"></ion-icon>Y-Axis</p>
+                  <div className="test_container_inputs">
+                    {isCreateClicked ? createY_axisTags() : ""}
+                  </div>
+                </div>
+              </>
             </div>
           ):""
         }
