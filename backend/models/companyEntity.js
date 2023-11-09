@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import User from './userModel.js';
+import masterClass from './materialsModel.js';
 
 // COMPANY ENTITY
 const companyEntity = mongoose.Schema(
@@ -14,15 +15,21 @@ const companyEntity = mongoose.Schema(
         },
         users: [
             {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: 'User',
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'User',
             },
         ],
         Legacymaterials:[
-            { type:String }
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'masterClass',
+            }
         ], // Array of Materials name
         Properitarymaterials:[  
-            { type:String }
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'masterClass',
+            }
         ], // Array of Materials name
     },{
     timestamps:true

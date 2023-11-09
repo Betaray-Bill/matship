@@ -44,13 +44,10 @@ const addMaterial = asyncHandler(async(req, res) => {
     try{
         console.log(productName, companyEntityExists)
         if(isLegacy){
-            await companyEntityExists.Legacymaterials.push(productName);
+            await companyEntityExists.Legacymaterials.push(_id);
             await companyEntityExists.save()
         }else{
             // check if the material already exists in Db;
-
-            
-
             await companyEntityExists.Properitarymaterials.push(productName);
             await companyEntityExists.save()
         }
@@ -60,6 +57,22 @@ const addMaterial = asyncHandler(async(req, res) => {
         console.error(error);
         return res.status(500).json({ error: 'Error adding the materials to Company' });
     }
+})
+
+// Update Single Material Material
+const updateMaterial = asyncHandler(async(req, res) => {
+    const material = await masterClass.findById(req.params.id);
+    const Entity = await CompanyEntity.find({
+        name:req.params.companyEntity
+    });
+
+    console.log("Material", material, Entity)
+    if(!material && !Entity){
+        res.status(400)
+        throw new Error("Material not found")
+    }
+    const updatedMaterial = await masterClass.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json(updatedMaterial)
 })
 
 // get data from a single company - GET - /:companyEntity/getAllProducts
@@ -145,51 +158,5 @@ const getUploadSearch = asyncHandler(async(req, res) => {
 })
 
 
-export { getGlobalSearch, getAllData, addMaterial, getProductCompany, getUploadSearch, getSingleMaterial}
+export { getGlobalSearch, getAllData, addMaterial, getProductCompany, getUploadSearch, getSingleMaterial,updateMaterial}
 
-
-
-// const query = req.query.value;
-//     console.log("req.query.value", req.query.value)
-//     const ans = await masterClass.find({ 
-//         name: { 
-//             $regex: new RegExp(`^${query}`, 'i') 
-//         } 
-//     })
-
-//     const suggestions  = await Array.from(ans).map((e) => e.name)
-
-//     res.status(200).json({
-//         ans, suggestions
-//     })
-
-
-
-
-
-
-
-
-
-// const query = req.params.value;
-//     console.log("req.query.value", req.params.value)
-
-//     const ans = await masterClass.aggregate([
-//         {
-//             $search: {
-//             index: "masterclasses",
-//             text: {
-//                 query: req.params.value,
-//                 path: {
-//                     wildcard: "*"
-//                     }
-//                 }
-//             }
-//         }
-//     ])
-
-//     const suggestions  = await Array.from(ans).map((e) => e.name)
-
-//     res.status(200).json({
-//         ans, suggestions
-//     })

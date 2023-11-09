@@ -45,7 +45,37 @@ const masterSchema = mongoose.Schema(
     L0:{
       type:Number,
       required:true
-    }
+    },
+    temperature:[
+      {
+        type:Number
+      }
+    ],
+    conditioned:[
+      {
+        type:Number
+      }
+    ],
+    NumberOf_Specimens:[
+      {
+        type:Number
+      }
+    ],
+    CrossHeadSpeed:[
+      {
+        type:Number
+      }
+    ],
+    X_axis_Type:[
+      {
+        type:Number
+      }
+    ],
+    Y_axis_Type:[
+      {
+        type:Number
+      }
+    ]
   }
 );
 
