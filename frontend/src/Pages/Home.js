@@ -10,6 +10,9 @@ var subclassSet = new Set();
 var familySet = new Set();
 var m= []
 
+var classMap = new Map();
+var subclassMap = new Map();
+var familyMap = new Map();
 
 var Class = []
 var SubClass = []
@@ -36,7 +39,33 @@ function Home() {
             const {data} = await axios.get('/api/materials/getall')
             await setDatas(data)
             console.log(data)
+            classMap.clear();
+            subclassMap.clear();
+            familyMap.clear()
             for (const i of data) {
+
+                if (classMap.has(i.MasterClass)) {
+                    // Increment the count for the i.MasterClass.
+                    classMap.set(i.MasterClass, classMap.get(i.MasterClass) + 1);
+                } else {
+                    // Add the i.MasterClass to the classMap with a count of 1.
+                    classMap.set(i.MasterClass, 1);
+                }
+                if (subclassMap.has(i.subClass)) {
+                    // Increment the count for the i.subClass.
+                    subclassMap.set(i.subClass, subclassMap.get(i.subClass) + 1);
+                } else {
+                    // Add the i.subClass to the subclassMap with a count of 1.
+                    subclassMap.set(i.subClass, 1);
+                }
+                if (familyMap.has(i.Family)) {
+                    // Increment the count for the i.Family.
+                    familyMap.set(i.Family, familyMap.get(i.Family) + 1);
+                } else {
+                    // Add the i.Family to the familyMap with a count of 1.
+                    familyMap.set(i.Family, 1);
+                }
+
                 classSet.add(i.MasterClass);
                 subclassSet.add(i.subClass)
                 familySet.add(i.Family)
@@ -55,6 +84,7 @@ function Home() {
             }
 
             console.log(Class, SubClass, FamilyClass)
+            console.log("Map", classMap)
         }catch(err){
             console.log(err)
             navigate('/pagenotfound')
@@ -63,7 +93,7 @@ function Home() {
 
     useEffect(() => {
         getAllData()
-    }, [])
+    }, [classMap])
 
 
     // Global Search
@@ -189,10 +219,17 @@ function Home() {
                         <h2>Advanced Filter :</h2>
 
                         <div className="advanced_filter_wrapper">
+                            {
+                                Array.from(classMap).map((key,value) => (
+                                    <span>
+                                        <h3>{key[0]} : {key[1]}</h3>
+                                    </span>
+                                ))
+                            }
                             <form>
-                                <Maindropdown data={Class} name={"Master Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
-                                <Maindropdown data={SubClass} name={"Sub Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
-                                <Maindropdown data={FamilyClass} name={"Family"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown data={classMap} name={"Master Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown data={subclassMap} name={"Sub Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown data={familyMap} name={"Family"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
                             </form>
                         </div>
                         

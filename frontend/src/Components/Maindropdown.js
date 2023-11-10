@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 
 function Maindropdown({data, name, sendToParent, removeFromParent}) {
-
+ 
     const [value, setvalue] = useState([]);
     const [isDroped, setIsDroped] = useState(false);
 
@@ -31,6 +31,14 @@ function Maindropdown({data, name, sendToParent, removeFromParent}) {
 
   return (
     <div>
+        {/*                 {
+                                Array.from(data).map((key,value) => (
+                                    <span>
+                                        <h3>{key[0]} : {key[1]}</h3>
+                                    </span>
+                                ))
+                            } 
+        */}
         <div className="dropdown_box">
                 <div className="dropdown_header_section">
                    <div className="dropdown_header" onClick={() => setIsDroped(!isDroped)}>
@@ -50,8 +58,8 @@ function Maindropdown({data, name, sendToParent, removeFromParent}) {
 
                 <div className={isDroped ? `dropdown_list` : `dropdown_list_hidden`}>
                     {
-                        data ? data.map((e, _i) => (
-                            <li key={_i}><input type="checkbox" value={e} onChange={(i) => handleChange(i)} />{e}</li>
+                        data ? Array.from(data).map((key, _i) => (
+                            <li key={_i}><input type="checkbox" value={key[0]} onChange={(i) => handleChange(i)} />{key[0]}-({key[1]})</li>
                         )) : "Loading.."
                     }
 

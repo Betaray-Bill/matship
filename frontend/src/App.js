@@ -7,6 +7,7 @@ import Register from './Pages/Register';
 import PrivateRoute from './Components/PrivateRoute';
 import Pagenotfound from './Pages/Pagenotfound';
 import Upload from './Pages/Upload';
+import Demo from './Pages/Demo';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/pagenotfound" element={<Pagenotfound />}/>
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Home />}/>
+          {/* <Route path="/" element={<Demo />}/> */}
           <Route path="/uploadData" element={<Upload />}/>
         </Route>
       </Routes>
