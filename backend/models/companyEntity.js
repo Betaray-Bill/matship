@@ -21,14 +21,12 @@ const companyEntity = mongoose.Schema(
         ],
         Legacymaterials:[
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'masterClass',
+                type: String,
             }
         ], // Array of Materials name
         Properitarymaterials:[  
             {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'masterClass',
+                type: String,
             }
         ], // Array of Materials name
     },{

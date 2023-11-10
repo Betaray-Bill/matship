@@ -44,7 +44,7 @@ const addMaterial = asyncHandler(async(req, res) => {
     try{
         console.log(productName, companyEntityExists)
         if(isLegacy){
-            await companyEntityExists.Legacymaterials.push(_id);
+            await companyEntityExists.Legacymaterials.push(productName);
             await companyEntityExists.save()
         }else{
             // check if the material already exists in Db;

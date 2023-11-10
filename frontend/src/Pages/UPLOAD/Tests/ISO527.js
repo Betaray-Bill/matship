@@ -2,6 +2,7 @@ import React, { Children, useEffect, useState } from 'react'
 import "../../../Styles/Pages/Test.css"
 import { useDispatch } from 'react-redux'
 import { testStandardInfo } from '../../../features/uploadSlice'
+import * as XLSX from "xlsx";
 
 function ISO527() {
   const dispatch = useDispatch()
@@ -156,8 +157,8 @@ function ISO527() {
               }} 
             >
               <option value=""></option>
-              <option value="Strain (%)">Strain (%)</option>
-              <option value="Eng Stress (MPa)">Eng Stress (MPa)</option>
+              <option value="Engineering Strain(%)">Engineering Strain(%)</option>
+              <option value="Engineering Stress(MPa)">Engineering Stress(MPa)</option>
             </select>
         </div>
       );
@@ -183,8 +184,8 @@ function ISO527() {
               }} 
             >
               <option value=""></option>
-              <option value="Strain (%)">Strain (%)</option>
-              <option value="Eng Stress (MPa)">Eng Stress (MPa)</option>
+              <option value="Engineering Strain(%)">Engineering Strain(%)</option>
+              <option value="Engineering Stress(MPa)">Engineering Stress(MPa)</option>
             </select>
         </div>
       );
