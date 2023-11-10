@@ -45,24 +45,18 @@ function Home() {
             for (const i of data) {
 
                 if (classMap.has(i.MasterClass)) {
-                    // Increment the count for the i.MasterClass.
                     classMap.set(i.MasterClass, classMap.get(i.MasterClass) + 1);
                 } else {
-                    // Add the i.MasterClass to the classMap with a count of 1.
                     classMap.set(i.MasterClass, 1);
                 }
                 if (subclassMap.has(i.subClass)) {
-                    // Increment the count for the i.subClass.
                     subclassMap.set(i.subClass, subclassMap.get(i.subClass) + 1);
                 } else {
-                    // Add the i.subClass to the subclassMap with a count of 1.
                     subclassMap.set(i.subClass, 1);
                 }
                 if (familyMap.has(i.Family)) {
-                    // Increment the count for the i.Family.
                     familyMap.set(i.Family, familyMap.get(i.Family) + 1);
                 } else {
-                    // Add the i.Family to the familyMap with a count of 1.
                     familyMap.set(i.Family, 1);
                 }
 
@@ -137,32 +131,41 @@ function Home() {
         let str = resultStr !== null ? resultStr+' '+e : e
         setresultStr(str)
         console.log("Str", str)
-        if(type === "Remove"){
-            str = resultStr.replace(e, "").trim();
-        }
 
+        // remove the unchecked elements
+        if(type === "Remove"){
+            str = resultStr.replace(e, " ").trim()
+            console.log("removed", str)
+            setresultStr(str)
+        }
+        console.log(str)
+        // Checks if the input is null or not
+        if(str === null){
+            return alert("Enter Data")
+        }
+        // Fetches data
         const { data } = await axios.get(`api/materials/getglobalsearch/${str}`);
         await setreplicaData(data);
         console.log(data)
         m = data
-        Class.length = 0
-        SubClass.length = 0
-        FamilyClass.length = 0
+        classMap.clear();
+        subclassMap.clear();
+        familyMap.clear()
         for (const i of data) {
-            classSet.add(i.MasterClass);
-            subclassSet.add(i.subClass)
-            familySet.add(i.Family)
-
-            if(!Class.includes(i.MasterClass)){
-                Class.push(i.MasterClass)
+            if (classMap.has(i.MasterClass)) {
+                classMap.set(i.MasterClass, classMap.get(i.MasterClass) + 1);
+            } else {
+                classMap.set(i.MasterClass, 1);
             }
-            
-            if(!SubClass.includes(i.subClass)){
-                SubClass.push(i.subClass)
+            if (subclassMap.has(i.subClass)) {
+                subclassMap.set(i.subClass, subclassMap.get(i.subClass) + 1);
+            } else {
+                subclassMap.set(i.subClass, 1);
             }
-            
-            if(!FamilyClass.includes(i.Family)){
-                FamilyClass.push(i.Family)
+            if (familyMap.has(i.Family)) {
+                familyMap.set(i.Family, familyMap.get(i.Family) + 1);
+            } else {
+                familyMap.set(i.Family, 1);
             }
         }
         console.log(classSet, subclassSet, familySet)
@@ -196,6 +199,7 @@ function Home() {
                 </div>
                 
                 <div className="home_section">
+                    {/* Global Search */}
                     <div className="globalSearch">
                         <h2>Global Search</h2>
                         <div className="globalSearch_container">
@@ -215,6 +219,7 @@ function Home() {
                         </div>
                     </div>
                     
+                    {/* Advanced Search */}
                     <div className="advanced_filter_section">
                         <h2>Advanced Filter :</h2>
 
