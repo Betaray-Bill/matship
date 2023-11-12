@@ -75,8 +75,34 @@ const signout = asyncHandler(async(req, res) => {
     res.clearCookie('jwt').status(200).json('Signout success!');
 })
 
+
+// Update User - PUT - /update/:id
+const updateUser = asyncHandler(async(req, res) => {
+    const id = req.params.id;
+
+    const userExists = await User.findOne({ _id:id });
+    if (!userExists) {
+        res.status(400);
+        throw new Error('User doesn\'\t exists');
+    }
+
+    try{
+        const updateUser = await User.findByIdAndUpdate(
+            id,
+            {
+                $set:req.body
+            }
+        )
+        res.status(200).json(updateUser);
+    }catch(err){
+        return res.status(500).json("Error in Updating User")
+    }
+})
+
+
 export{
     login,
     register,
-    signout
+    signout,
+    updateUser
 }

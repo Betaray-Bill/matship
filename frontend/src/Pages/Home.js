@@ -14,12 +14,6 @@ var classMap = new Map();
 var subclassMap = new Map();
 var familyMap = new Map();
 
-var Class = []
-var SubClass = []
-var FamilyClass = []
-
-
-
 function Home() {
     const scrollToResult = useRef();
 
@@ -59,25 +53,7 @@ function Home() {
                 } else {
                     familyMap.set(i.Family, 1);
                 }
-
-                classSet.add(i.MasterClass);
-                subclassSet.add(i.subClass)
-                familySet.add(i.Family)
-
-                if(!Class.includes(i.MasterClass)){
-                    Class.push(i.MasterClass)
-                }
-                
-                if(!SubClass.includes(i.subClass)){
-                    SubClass.push(i.subClass)
-                }
-                
-                if(!FamilyClass.includes(i.Family)){
-                    FamilyClass.push(i.Family)
-                }
             }
-
-            console.log(Class, SubClass, FamilyClass)
             console.log("Map", classMap)
         }catch(err){
             console.log(err)
@@ -92,12 +68,13 @@ function Home() {
 
     // Global Search
     const fetchSearch = async(e) => {
-        if(e === ''){
-            alert("Enter data")
-        }else{
+        console.log(e)
+        if(e !== ''){
+            console.log(e)
             const {data} = await axios.get(`/api/materials/getglobalsearch/${e}`)
             await setresult(data)
             setIsSearched(true)
+            console.log(data)
             scrollToResult.current.scrollIntoView({ behavior: 'smooth' });
         }
     }
@@ -134,9 +111,12 @@ function Home() {
 
         // remove the unchecked elements
         if(type === "Remove"){
-            str = resultStr.replace(e, " ").trim()
-            console.log("removed", str)
-            setresultStr(str)
+            console.log(e)
+            if(resultStr !== null){
+                str = resultStr.replace(e, " ").trim()
+                console.log("removed", str)
+                setresultStr(str)
+            }
         }
         console.log(str)
         // Checks if the input is null or not
@@ -174,6 +154,7 @@ function Home() {
     }
 
     // Reset Filter
+    const [isReset, setIsReset] = useState(false)
     const resetFilter = async() => {
         const {data} = await axios.get('api/materials/getall')
         await setDatas(data)
@@ -205,7 +186,7 @@ function Home() {
                         <div className="globalSearch_container">
                             <ion-icon name="search-outline"></ion-icon>
                             <input type="text" value={value} 
-                                onChange={(e) => setvalue(e.target.value)} 
+                                onChange={(e) => {setvalue(e.target.value); fetchSearch(e.target.value)}} 
                                 onKeyPress={handleKeyPress}
                                 name="" placeholder='Search the materials..' />
                             {
@@ -268,42 +249,3 @@ function Home() {
 }
 
 export default Home
-
-
-{/* <select name="Master Class" className="search-select" onChange={(e) => {handleFilter(e.target.value, e.target.name)}}>
-    <option value="Master Class">Master Class</option>
-    {
-            classSet && Array.from(classSet).map((e, i) => (
-                <option value={e} key={i}>{e}</option>
-            ))
-        
-    }
-</select> */}
-{/* <select name="Sub Class" className="search-select"  onChange={(e) => {handleFilter(e.target.value, e.target.value)}}>
-    <option value="Sub Class">Sub Class</option>
-    {
-            subclassSet && Array.from(subclassSet).map((e, i) => (
-                <option value={e} key={i}>{e}</option>
-            ))
-    }
-    {
-        isUsedFilter ? m.map((e, i) => (
-            <option value={e} key={i}>{e}</option>
-        ))  :
-        classSet.size > 0 ? Array.from(subclassSet).map((e, i) => (
-            <option value={e} key={i}>{e}</option>
-        )) : <option value="No Results..">No Results..</option> 
-    }
-</select> */}
-{/* <select name="Supplier" className="search-select" >
-    <option value="Supplier">Supplier</option>
-    {
-        
-    }
-</select> */}
-            
-{/* <div className="dropdown_container">
-    <Dropdown data={isUsedFilter ? m : classSet }/>
-</div>
-<Dropdown data={isUsedFilter ? m : classSet }/>
-<Dropdown data={isUsedFilter ? m : classSet }/> */}
