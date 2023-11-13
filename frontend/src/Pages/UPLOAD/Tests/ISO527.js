@@ -248,6 +248,102 @@ function ISO527() {
       console.log(parsedData)
     };
   }
+
+
+
+
+  // Upload Dataset
+  const [nextClicked, setNextClicked] = useState(false)
+  const uploadDataset = () => {
+     setNextClicked(true)
+  }
+
+  // Create Upload Dataset Code;
+
+  const specimensInput = (index) => {
+    const InputTags = []
+    for(let i=0; i<noOfSpecimens[index]; i++){
+      InputTags.push(
+        <div className="upload_data_section">
+          <h2>X</h2>
+          <h2>Y</h2>
+        </div>
+      )
+    }
+    return InputTags
+  }
+
+  const createUploadDataset = () => {
+    const InputTags = []
+    for(let i=0; i<numberOfDataSets; i++){
+      console.log("Num",i);
+      console.log(noOfSpecimens[i])
+      InputTags.push(
+          <div className="upload_data_wrapper">
+              <div className="upload_data_container">
+                <div className="upload_container_header">
+                  <h4>Upload Dataset {i+1} </h4>
+                </div>
+                {
+                  specimensInput(i)
+                }
+              </div>
+          </div>
+      )
+    }
+
+    return InputTags
+  }
+
+  createUploadDataset()
+
+  // CREATE FIELD FOR EACH SPECIMENS
+  const [excelData, setExcelData] = useState([]);
+  const [xAxisData, setXAxisData] = useState([]);
+  const [yAxisData, setYAxisData] = useState([]);
+
+  const handleInputChange = (e, rowIndex, axis) => {
+    const newData = [...excelData];
+    newData[rowIndex][axis] = e.target.value;
+    setExcelData(newData);
+  };
+
+  const handleUserInput = (numRows) => {
+    const newData = [];
+    for (let i = 0; i < numRows; i++) {
+      newData.push({ x_axis: '', y_axis: '' });
+    }
+    setExcelData(newData);
+  };
+
+  const handlePaste = (e, rowIndex, axis) => {
+    e.preventDefault();
+    const clipboardData = e.clipboardData || window.clipboardData;
+    const pastedData = clipboardData.getData('text').split('\n');
+    
+    const newData = [...excelData];
+    pastedData.forEach((value, index) => {
+      if (newData[rowIndex + index]) {
+        newData[rowIndex + index][axis] = value;
+      }
+    });
+    
+    setExcelData(newData);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const xValues = excelData.map((row) => row.x_axis);
+    const yValues = excelData.map((row) => row.y_axis);
+
+    setXAxisData(xValues);
+    setYAxisData(yValues);
+
+    // Do something with xValues and yValues if needed
+    console.log('X Axis Data:', xValues);
+    console.log('Y Axis Data:', yValues);
+  };
+  console.log(excelData)
   return (
     <>
         <div className="test_container">
@@ -406,16 +502,68 @@ function ISO527() {
 
 
         <div className="next">
-            <div className="btn" onClick={saveData}>
-              Save
+            <div className="btn" onClick={uploadDataset}>
+             Next
             </div>
         </div>
+        
+        {/* <div>
+          <div className="btn" onClick={saveData}>
+            Save
+          </div>
+        </div> */}
+        
 
-        <input 
-          type="file" 
-          accept=".xlsx, .xls" 
-          onChange={handleFileUpload} 
-        />
+        {
+          nextClicked && (
+            createUploadDataset()
+          )
+        }
+
+
+        <div>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Number of Rows:
+          <input type="number" value={excelData.length} onChange={(e) => handleUserInput(e.target.value)} />
+        </label>
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+
+      {excelData.length > 0 && (
+        <table border="1">
+          <thead>
+            <tr>
+              <th>X Axis</th>
+              <th>Y Axis</th>
+            </tr>
+          </thead>
+          <tbody>
+            {excelData.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                <td>
+                  <input
+                    type="text"
+                    value={row.x_axis}
+                    onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
+                    onChange={(e) => handleInputChange(e, rowIndex, 'x_axis')}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    value={row.y_axis}
+                    onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
+                    onChange={(e) => handleInputChange(e, rowIndex, 'y_axis')}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
     </>
   )
 }

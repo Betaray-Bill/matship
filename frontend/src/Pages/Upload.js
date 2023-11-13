@@ -339,16 +339,17 @@ import BaseMaterialinfo from './UPLOAD/BaseMaterialinfo';
 import TestStandards from './UPLOAD/TestStandards';
 import '../Styles/Pages/Upload.css'
 
+let next=0;
 function Upload() {
   // Click Previous and Next 
   const formElement = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
 
+  const nextPage = next
   const formPages = [
-    <BaseMaterialinfo />,
+    <BaseMaterialinfo isClickedNext={next}/>,
     <TestStandards />
   ];
-
   const formname = [
     "Base material info",
     "Select Test Standard",

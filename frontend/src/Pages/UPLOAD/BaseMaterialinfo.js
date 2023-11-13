@@ -8,7 +8,8 @@ import debounce from 'lodash/debounce';
 import axios from 'axios';
 import { uploadbaseInfo } from '../../features/uploadSlice.js';
 
-function BaseMaterialinfo() {
+function BaseMaterialinfo({isClickedNext}) {
+  console.log(isClickedNext)
   const dispatch = useDispatch()
   const scrollToResult = useRef();
   const arr = [];
@@ -336,7 +337,9 @@ function BaseMaterialinfo() {
               </div>
           </div>
 
-
+          <div onClick={()=>{isClickedNext(2)}}>
+            next
+          </div>
         </div>
     </>
   )
