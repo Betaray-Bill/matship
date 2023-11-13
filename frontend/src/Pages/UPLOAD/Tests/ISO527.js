@@ -18,7 +18,13 @@ function ISO527() {
     NumberOf_Specimens:[],
     CrossHeadSpeed:[],
     x_axis:[],
-    y_axis:[]
+    y_axis:[],
+    dataSetValue:[
+      {
+        x:[],
+        y:[]
+      },
+    ]
   });
 
   useEffect(() => {
@@ -233,76 +239,36 @@ function ISO527() {
 
 
   // Handling Files
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
 
-  const handleFileUpload = (e) => {
-    const reader = new FileReader();
-    reader.readAsBinaryString(e.target.files[0]);
-    reader.onload = (e) => {
-      const data = e.target.result;
-      const workbook = XLSX.read(data, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const parsedData = XLSX.utils.sheet_to_json(sheet);
-      setData(parsedData);
-      console.log(parsedData)
-    };
-  }
+  // const handleFileUpload = (e) => {
+  //   const reader = new FileReader();
+  //   reader.readAsBinaryString(e.target.files[0]);
+  //   reader.onload = (e) => {
+  //     const data = e.target.result;
+  //     const workbook = XLSX.read(data, { type: "binary" });
+  //     const sheetName = workbook.SheetNames[0];
+  //     const sheet = workbook.Sheets[sheetName];
+  //     const parsedData = XLSX.utils.sheet_to_json(sheet);
+  //     setData(parsedData);
+  //     console.log(parsedData)
+  //   };
+  // }
 
+// 
 
-
-
-  // Upload Dataset
   const [nextClicked, setNextClicked] = useState(false)
   const uploadDataset = () => {
      setNextClicked(true)
   }
 
-  // Create Upload Dataset Code;
-
-  const specimensInput = (index) => {
-    const InputTags = []
-    for(let i=0; i<noOfSpecimens[index]; i++){
-      InputTags.push(
-        <div className="upload_data_section">
-          <h2>X</h2>
-          <h2>Y</h2>
-        </div>
-      )
-    }
-    return InputTags
-  }
-
-  const createUploadDataset = () => {
-    const InputTags = []
-    for(let i=0; i<numberOfDataSets; i++){
-      console.log("Num",i);
-      console.log(noOfSpecimens[i])
-      InputTags.push(
-          <div className="upload_data_wrapper">
-              <div className="upload_data_container">
-                <div className="upload_container_header">
-                  <h4>Upload Dataset {i+1} </h4>
-                </div>
-                {
-                  specimensInput(i)
-                }
-              </div>
-          </div>
-      )
-    }
-
-    return InputTags
-  }
-
-  createUploadDataset()
 
   // CREATE FIELD FOR EACH SPECIMENS
   const [excelData, setExcelData] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
 
-  const handleInputChange = (e, rowIndex, axis) => {
+  const   handleInputChange = (e, rowIndex, axis) => {
     const newData = [...excelData];
     newData[rowIndex][axis] = e.target.value;
     setExcelData(newData);
@@ -314,6 +280,7 @@ function ISO527() {
       newData.push({ x_axis: '', y_axis: '' });
     }
     setExcelData(newData);
+    console.log(newData)
   };
 
   const handlePaste = (e, rowIndex, axis) => {
@@ -344,6 +311,85 @@ function ISO527() {
     console.log('Y Axis Data:', yValues);
   };
   console.log(excelData)
+
+  // Create Upload Dataset Code;
+  const specimensInput = (index) => {
+    const InputTags = []
+    var j=1;
+    for(let i=0; i<noOfSpecimens[index]; i++){
+      InputTags.push(
+        <div className="upload_data_section">
+            {excelData.length > 0 && (
+              <div className="upload_data_table">
+                <h3>
+                  Specimen {j}
+                </h3>
+                <table border="1">
+                  <thead>
+                    <tr>
+                      <th>X Axis</th>
+                      <th>Y Axis</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {excelData.map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.x_axis}
+                            onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
+                            onChange={(e) => handleInputChange(e, rowIndex, 'x_axis')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={row.y_axis}
+                            onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
+                            onChange={(e) => handleInputChange(e, rowIndex, 'y_axis')}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+        </div>
+      )
+      j=j+1;
+    }
+    return InputTags
+  }
+
+  const createUploadDataset = () => {
+    const InputTags = []
+    for(let i=0; i<numberOfDataSets; i++){
+      console.log("Num",i);
+      console.log(noOfSpecimens[i])
+      InputTags.push(
+          <div className="upload_data_wrapper">
+              <div className="upload_data_container">
+                <div className="upload_container_header">
+                  <h4>Upload Dataset {i+1} </h4>
+                </div>
+                <div className="upload_data_wrapper">
+                {
+                  specimensInput(i)
+                }
+                </div>
+              </div>
+          </div>
+      )
+    }
+
+    return InputTags
+  }
+
+  createUploadDataset()
+
+  
   return (
     <>
         <div className="test_container">
@@ -499,70 +545,28 @@ function ISO527() {
             </div>
           ):""
         }
-
+        <form onSubmit={handleSubmit}>
+          <label>
+            Number of Rows:
+            <input type="number" value={excelData.length} onChange={(e) => handleUserInput(e.target.value)} />
+          </label>
+          <br />
+          {/* <button type='submit'>submit</button> */}
+        </form>
 
         <div className="next">
             <div className="btn" onClick={uploadDataset}>
              Next
             </div>
         </div>
-        
-        {/* <div>
-          <div className="btn" onClick={saveData}>
-            Save
-          </div>
-        </div> */}
-        
 
-        {
-          nextClicked && (
-            createUploadDataset()
-          )
-        }
+      <div>
 
-
-        <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Number of Rows:
-          <input type="number" value={excelData.length} onChange={(e) => handleUserInput(e.target.value)} />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-
-      {excelData.length > 0 && (
-        <table border="1">
-          <thead>
-            <tr>
-              <th>X Axis</th>
-              <th>Y Axis</th>
-            </tr>
-          </thead>
-          <tbody>
-            {excelData.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                <td>
-                  <input
-                    type="text"
-                    value={row.x_axis}
-                    onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
-                    onChange={(e) => handleInputChange(e, rowIndex, 'x_axis')}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={row.y_axis}
-                    onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
-                    onChange={(e) => handleInputChange(e, rowIndex, 'y_axis')}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {
+         nextClicked && (
+          createUploadDataset()
+        )
+      }
     </div>
     </>
   )

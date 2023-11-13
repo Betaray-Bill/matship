@@ -1,5 +1,5 @@
 .test_container{
-    width: 70vw;
+    width: 80vw;
     border: 1px solid #505dd6ac;
     margin: 5vh 0px;
     border-radius: 12px;
@@ -9,7 +9,7 @@
 
 @media(max-width:1124px){
     .test_container{
-        width: 85vw;
+        width: 90vw;
     }
 }
 
@@ -191,10 +191,58 @@
     padding: 8px 20px;
     border: 1px solid #505dd6;
     border-radius: 9px;
-    width: max-content;
+    width: 70vw;
     margin-top: 5vh;
+    display: grid;
+    place-content: center;
 }
 
 .upload_container_header{
-    /* border-bottom: 1px solid #505dd633; */
+    font-size: 24px;
+}
+
+.upload_data_wrapper{
+    width:70vw;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 25px;
+}
+.upload_data_section{
+    /* margin: 30px; */
+    /* background-color: aqua; */
+}
+
+.upload_data_table{
+    max-height: 50vh;
+    overflow-y: scroll;
+    border-collapse: collapse;
+    width: max-content;
+    padding: 20px;
+    /* background-color: aqua; */
+    outline: none;
+    border-radius: 9px;
+}
+.upload_data_table table{
+    width: max-content;
+    border-radius: 12px;
+    padding: 4px;
+    display: inline-block;
+}
+thead, tbody{
+    border: none;
+    outline: none;
+}
+th, td {
+    border:1px solid #505dd633;
+    padding: 4px;
+    border-radius: 9px;
+}
+th{
+    border:1px solid #000;
+}
+.upload_data_table input{
+    background-color: transparent;
+    border-radius: 9px;
+    outline: none;
+    border: none;
 }

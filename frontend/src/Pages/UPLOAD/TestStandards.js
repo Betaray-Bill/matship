@@ -12,6 +12,7 @@ function TestStandards() {
           <div className="upload_header">
             <p>2. Select Test Standard</p>
           </div>
+          <form action="">
           <div className="testStandard_dropdown">
             <select onChange={(e) => setTestStandard(e.target.value)}>
               <option value="Select Test Standard">Select Test Standard</option>
@@ -26,6 +27,7 @@ function TestStandards() {
               <ISO527 />
             )
           }
+          </form>
 
         </div>
       </div>
