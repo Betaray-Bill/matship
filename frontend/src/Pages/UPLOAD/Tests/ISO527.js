@@ -1,10 +1,11 @@
-import React, { Children, useEffect, useState } from 'react'
+import React, { Children, Fragment, useEffect, useState } from 'react'
 import "../../../Styles/Pages/Test.css"
 import { useDispatch } from 'react-redux'
 import { testStandardInfo } from '../../../features/uploadSlice'
 import * as XLSX from "xlsx";
 
 function ISO527() {
+  const arr = []
   const dispatch = useDispatch()
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
   const [specimenClicked, setSpecimenClicked] = useState(false)
@@ -256,25 +257,34 @@ function ISO527() {
   // }
 
 // 
-
+  const [userInput, setUserInput] = useState(0);
+  const [dynamicArray, setDynamicArray] = useState([]);
   const [nextClicked, setNextClicked] = useState(false)
   const uploadDataset = () => {
-     setNextClicked(true)
+    setNextClicked(true)
   }
 
-
+  console.log(dynamicArray)
   // CREATE FIELD FOR EACH SPECIMENS
   const [excelData, setExcelData] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
+  const [tableData, setTableData] = useState({});
 
+  console.log("Talbe", tableData)
   const   handleInputChange = (e, rowIndex, axis) => {
     const newData = [...excelData];
     newData[rowIndex][axis] = e.target.value;
     setExcelData(newData);
+    setTableData( {
+      ...tableData,
+
+    })
   };
 
   const handleUserInput = (numRows) => {
+    setUserInput(numRows);
+
     const newData = [];
     for (let i = 0; i < numRows; i++) {
       newData.push({ x_axis: '', y_axis: '' });
@@ -317,6 +327,11 @@ function ISO527() {
     const InputTags = []
     var j=1;
     for(let i=0; i<noOfSpecimens[index]; i++){
+      const value =  parseInt(noOfSpecimens[index], 10);
+      arr.push(Array.from({ length: value }, () => [{}, {}]))
+      // console.log(newArray)
+      // arr.push(newArray)
+      console.log(arr)
       InputTags.push(
         <div className="upload_data_section">
             {excelData.length > 0 && (
@@ -368,6 +383,9 @@ function ISO527() {
     for(let i=0; i<numberOfDataSets; i++){
       console.log("Num",i);
       console.log(noOfSpecimens[i])
+      // const value = parseInt(1, 10);
+      // const newArray = Array.from({ length: value }, () => [{}, {}]);
+      // setDynamicArray(newArray);
       InputTags.push(
           <div className="upload_data_wrapper">
               <div className="upload_data_container">
@@ -564,7 +582,11 @@ function ISO527() {
 
       {
          nextClicked && (
-          createUploadDataset()
+          <div style={{display:"grid", placeContent:"center"}}>
+          {
+            createUploadDataset()
+          }
+          </div>
         )
       }
     </div>

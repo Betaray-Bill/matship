@@ -206,10 +206,9 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 25px;
+    place-content: center;
 }
 .upload_data_section{
-    /* margin: 30px; */
-    /* background-color: aqua; */
 }
 
 .upload_data_table{
