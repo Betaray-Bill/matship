@@ -7,8 +7,14 @@
 }
 
 .form_header_container{
+    width: 100vw;
     display: flex;
     align-items: center;
+    position: fixed;
+    text-align: center;
+    padding-left: 30%;
+    z-index: 1000;
+    background-color:white;
 }
 
 .form_header_container h4{
@@ -23,7 +29,7 @@
     border-left: none;
     margin-left: 10px;
 }
-  
+
 
 .page_name{
     display: flex;

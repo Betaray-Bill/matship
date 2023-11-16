@@ -261,6 +261,7 @@ function ISO527() {
   const [dynamicArray, setDynamicArray] = useState([]);
   const [nextClicked, setNextClicked] = useState(false)
   const uploadDataset = () => {
+    // dispatch(uploadDataset(testData))
     setNextClicked(true)
   }
 
@@ -590,6 +591,12 @@ function ISO527() {
         )
       }
     </div>
+      `       <div className="next">
+                <div className="btn" onClick={saveData}>
+                  Save
+                </div>
+                {/* <div className="btn" onClick={nextTestStandard} ref={scrollToResult}>Next</div> */}
+              </div>
     </>
   )
 }

@@ -333,7 +333,7 @@
 // export default Upload
 
 
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Nav from '../Components/Nav'
 import BaseMaterialinfo from './UPLOAD/BaseMaterialinfo';
 import TestStandards from './UPLOAD/TestStandards';
@@ -361,12 +361,33 @@ function Upload() {
     }
   }
 
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const stickySectionOffsetTop = document.getElementById('sticky-section').offsetTop;
+
+        if (scrollTop >= stickySectionOffsetTop) {
+          setIsSticky(true);
+        } else {
+          setIsSticky(false);
+        }
+     };
+
+      window.addEventListener('scroll', handleScroll);
+
+      return() => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+  }, []);
+
   
   return (
     <>
       <Nav />
       <div className="form_header">
-        <div className="form_header_container">
+        <div id="sticky-section" className="form_header_container" style={{ position: isSticky ? 'fixed' : 'relative', top: isSticky ? 0 : 'auto' }}>
         {
           formname.map((e, _i) => (
             <div className="page_name" ref={formElement} onClick={() => goToFormPage(_i)} key={_i}>
@@ -381,10 +402,11 @@ function Upload() {
         </div>
       
       </div>
-
-      {
+        <BaseMaterialinfo  isClickedNext={next}/>
+        <TestStandards />
+      {/* {
         formPages[currentPage]
-      }
+      } */}
     </>
   )
 }

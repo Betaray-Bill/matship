@@ -7,18 +7,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
 import { uploadbaseInfo } from '../../features/uploadSlice.js';
+import { isFormFilledFalse, isFormFilledTrue } from '../../features/isFormFilled.js';
 
 function BaseMaterialinfo({isClickedNext}) {
   console.log(isClickedNext)
   const dispatch = useDispatch()
+  const {isFormFilledState} = useSelector(state => state.formFilled)
   const scrollToResult = useRef();
   const arr = [];
-  
+  console.log(isFormFilledState)
   const [showElements, setShowElements] = useState(false)
   const [isLegacyYes, setIsLegacyYes] = useState(false);
   const [isLegacyNo, setIsLegacyNo] = useState(false);
 
   const {currentUser} = useSelector(state => state.user)
+  const {basematerialInfo} = useSelector(state => state.uploadData)
+  console.log(basematerialInfo)
 
   const [addData, setAddData] = useState({
     MasterClass:"",
@@ -63,6 +67,7 @@ function BaseMaterialinfo({isClickedNext}) {
 
   const toggleShowContent = () => {
     setShowElements(true)
+    dispatch(isFormFilledFalse())
     setClicked(!clicked)
     setAddData({
       MasterClass:"",
@@ -192,8 +197,11 @@ function BaseMaterialinfo({isClickedNext}) {
     scrollToResult.current.scrollIntoView({ behavior: 'smooth' });
   }
   // Save to Redux
-  const saveData = async() => {
+  const saveData = async(e) => {
+    e.preventDefault()
+    setShowElements(true)
     await dispatch(uploadbaseInfo(addData))
+    await dispatch(isFormFilledTrue())
   }
 
   const clearData = () => {
@@ -242,7 +250,7 @@ function BaseMaterialinfo({isClickedNext}) {
                         onChange={(e) => {setValue(e.target.value) }}
                         onKeyPress={handleKeyPress}
                         onClick={(e) => setClicked(!clicked)}
-                        value={value}
+                        value={ value}
                     />
                     <ion-icon name="search-outline"></ion-icon>
                   </div>
@@ -279,13 +287,13 @@ function BaseMaterialinfo({isClickedNext}) {
                       </div>
                       <div className="add_element_container">
                         <div className="ade_content">
-                              <Dropdown header={"Class"} data={masterClass} sendToParent={handleDataReceived}/>
+                              <Dropdown header={isFormFilledState ? basematerialInfo.MasterClass : "Class"} data={masterClass} sendToParent={handleDataReceived}/>
                         </div>
                         <div className="ade_content">
-                              <Dropdown header={"Sub Class"} data={receivedData && subClass[receivedData].subClass }  sendToParent={handleDataSubClass}/>
+                              <Dropdown header={isFormFilledState ? basematerialInfo.subClass : "Sub Class"} data={receivedData && subClass[receivedData].subClass }  sendToParent={handleDataSubClass}/>
                         </div>
                         <div className="ade_content">
-                              <Dropdown header={"Family"} data={receivedSubClass && Family[receivedSubClass].subClass} sendToParent={handleDataFamily}/>
+                              <Dropdown header={isFormFilledState ? basematerialInfo.Family : "Family"} data={receivedSubClass && Family[receivedSubClass].subClass} sendToParent={handleDataFamily}/>
                         </div>
                         {
                           isLegacyYes ? 
@@ -295,24 +303,34 @@ function BaseMaterialinfo({isClickedNext}) {
                           </div> :
                           <div className="ade_content_input">
                             <label htmlFor="">Company Name</label>
-                            <input type="text" onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} name="Delivery form" placeholder=''/>
+                            <input type="text" 
+                              value={isFormFilledState ? basematerialInfo.company : addData.company}
+                              onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} name="Delivery form" placeholder=''/>
                           </div>
                         }
                         <div className="ade_content_input">
                           <label htmlFor="">Product Name</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, productName:e.target.value})} value={addData.productName && addData.productName} name="productName" placeholder=''/>
+                          <input type="text" 
+                            value={isFormFilledState ? basematerialInfo.productName : addData.productName} 
+                            onChange={(e) => setAddData({...addData, productName:e.target.value})}  name="productName" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Sustainability</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, Sustainability:e.target.value})} value={addData.Sustainability && addData.Sustainability} name="Sustainability" placeholder=''/>
+                          <input type="text" 
+                            value={isFormFilledState ? basematerialInfo.Sustainability : addData.Sustainability} 
+                            onChange={(e) => setAddData({...addData, Sustainability:e.target.value})} name="Sustainability" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Filler</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, Filler:e.target.value})} value={addData.Filler && addData.Filler} name="Filler" placeholder=''/>
+                          <input type="text" 
+                            value={isFormFilledState ? basematerialInfo.Filler : addData.Filler} 
+                            onChange={(e) => setAddData({...addData, Filler:e.target.value})} name="Filler" placeholder=''/>
                         </div>
                         <div className="ade_content_input">
                           <label htmlFor="">Delivery form</label>
-                          <input type="text" onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} value={addData.DeliveryForm && addData.DeliveryForm} name="Delivery form" placeholder=''/>
+                          <input type="text" 
+                            value={isFormFilledState ? basematerialInfo.DeliveryForm : addData.DeliveryForm} 
+                            onChange={(e) => setAddData({...addData, DeliveryForm:e.target.value})} name="Delivery form" placeholder=''/>
                         </div>
                         {
                           isLegacyNo ? 
@@ -327,7 +345,7 @@ function BaseMaterialinfo({isClickedNext}) {
                   )
                 }
 
-              </form>
+              </form>                      
 
               <div className="next">
                 <div className="btn" onClick={saveData}>
@@ -337,9 +355,9 @@ function BaseMaterialinfo({isClickedNext}) {
               </div>
           </div>
 
-          <div onClick={()=>{isClickedNext(2)}}>
+          {/* <div onClick={()=>{isClickedNext(2)}}>
             next
-          </div>
+          </div> */}
         </div>
     </>
   )
