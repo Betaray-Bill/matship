@@ -9,7 +9,7 @@ var table = {
 }
 
 function ISO527({isClickedNext}) {
-
+  const [dynamicArray, setDynamicArray] = useState([]);
   const [formData, setFormData] = useState({
     testStandard:"ISO527",
     SpecimenType:"",
@@ -21,12 +21,7 @@ function ISO527({isClickedNext}) {
     CrossHeadSpeed:[],
     x_axis:[],
     y_axis:[],
-    dataSetValue:[
-      {
-        x:[],
-        y:[]
-      },
-    ]
+    dataSetValue:[    ]
   })
   const dispatch = useDispatch()
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
@@ -212,6 +207,8 @@ function ISO527({isClickedNext}) {
   }
 
   const saveData = async() => {
+    await setFormData({...formData, dataSetValue:dynamicArray})
+    console.log(formData)
     await dispatch(testStandardInfo(formData))
   }
 
@@ -240,7 +237,9 @@ function ISO527({isClickedNext}) {
     setFormData({...formData, y_axis:y_axis})
   },[ y_axis])
 
-
+  useEffect(() => {
+    setFormData({...formData, dataSetValue:dynamicArray})
+  },[ dynamicArray])
 
 
   // Handling Files
@@ -267,7 +266,6 @@ function ISO527({isClickedNext}) {
   const createDynamicObject = (index) => ({
     [index]:[[], []]
   }); //Create Dynamic Array 
-  const [dynamicArray, setDynamicArray] = useState([]);
   // upload Dataset to Redux and create a 
   const uploadDataset = (NumberOf_Specimens , numberOf_Rows) => {
     console.log(NumberOf_Specimens, numberOf_Rows)
@@ -311,6 +309,7 @@ function ISO527({isClickedNext}) {
         insertOrUpdateAtIndex(n[index][i][i][1], rowIndex, e.target.value)
       }
     console.log(n)
+    setDynamicArray(n)
     console.log(arrayData)
   };
 

@@ -346,7 +346,7 @@ function Upload() {
   const formElement = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const {currentUser} = useSelector(state => state.user)
-
+  const {basematerialInfo, testStandard} = useSelector(state => state.uploadData)
   const nextPage = next
   const formPages = [
     <BaseMaterialinfo isClickedNext={next} />,
@@ -365,7 +365,23 @@ function Upload() {
 
   const submitForm = async(e) => {
     e.preventDefault();
+    var obj = {...basematerialInfo, ...testStandard}
+    try{
+      const res = await fetch("/api/materials/addMaterial", {
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
+        },  
+        body: JSON.stringify(obj)
+      })
 
+      const data = await res.json();
+      console.log(data)
+
+    }catch(err){
+      console.log(err)
+    }
+    console.log(obj)
   }
   
   return (
