@@ -9,7 +9,7 @@ var table = {
 }
 
 function ISO527({isClickedNext}) {
-  const arr = []
+
   const [formData, setFormData] = useState({
     testStandard:"ISO527",
     SpecimenType:"",
@@ -267,7 +267,8 @@ function ISO527({isClickedNext}) {
   const createDynamicObject = (index) => ({
     [index]:[[], []]
   }); //Create Dynamic Array 
-  const [dynamicArray, setDynamicArray] = useState({});
+  const [dynamicArray, setDynamicArray] = useState([]);
+  // upload Dataset to Redux and create a 
   const uploadDataset = (NumberOf_Specimens , numberOf_Rows) => {
     console.log(NumberOf_Specimens, numberOf_Rows)
     setNextClicked(true);
@@ -277,13 +278,13 @@ function ISO527({isClickedNext}) {
       for(let j=0; j<NumberOf_Specimens[i]; j++){
         const newObject = createDynamicObject(j);;
         b[j] =Object.assign(newObject)
-        console.log(i, j, b)
       }
       obj[i] = b;
     }
     console.log(obj)
     setDynamicArray(obj)
   }
+  
   console.log(dynamicArray)
   const [excelData, setExcelData] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
@@ -293,22 +294,28 @@ function ISO527({isClickedNext}) {
   console.log("Talbe", tableData)
   const [arrayData, setArrayData] = useState([]);
 
+  function insertOrUpdateAtIndex(myArray, indexToInsert, newValue) {
+    if (indexToInsert >= 0 && indexToInsert < myArray.length) {
+      myArray.splice(indexToInsert, 1, newValue);
+    } else {
+      myArray.splice(myArray.length, 0, newValue);
+    }
+  }
+
   const  handleInputChange = (e, rowIndex, axis, i, index) => {
-    const newArrayData = [];
     console.log(index+1, i+1, axis, rowIndex+1, e.target.value)
-    
+      const n = dynamicArray;
+      if(axis === 'x_axis'){
+        insertOrUpdateAtIndex(n[index][i][i][0], rowIndex, e.target.value)
+      }else{
+        insertOrUpdateAtIndex(n[index][i][i][1], rowIndex, e.target.value)
+      }
+    console.log(n)
     console.log(arrayData)
-    const newData = [...excelData];
-    newData[rowIndex][axis] = e.target.value;
-    // setExcelData(newData);
-    // setTableData( {
-    //   ...tableData,
-    // })
   };
 
   const handleUserInput = (numRows) => {
     setUserInput(numRows);
-
     const newData = [];
     for (let i = 0; i < numRows; i++) {
       newData.push({ x_axis: '', y_axis: '' });
@@ -352,11 +359,6 @@ function ISO527({isClickedNext}) {
     const InputTags = []
     var j=1;
     for(let i=0; i<noOfSpecimens[index]; i++){
-      // const value =  parseInt(noOfSpecimens[index], 10);
-      // arr.push(Array.from({ length: value }, () => [{}, {}]))
-      // // console.log(newArray)
-      // // arr.push(newArray)
-      // console.log(arr)
       InputTags.push(
         <div className="upload_data_section">
             {excelData.length > 0 && (
@@ -377,10 +379,6 @@ function ISO527({isClickedNext}) {
                         <td>
                           <input
                             type="text"
-                            // value={row.x_axis}
-                            // onChange={(e) => {
-                            //   console.log(row, rowIndex)
-                            // }}
                             // onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
                             onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
                           />
@@ -388,7 +386,6 @@ function ISO527({isClickedNext}) {
                         <td>
                           <input
                             type="text"
-                            // value={row.y_axis}
                             // onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
                             onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
                           />
@@ -411,9 +408,6 @@ function ISO527({isClickedNext}) {
     for(let i=0; i<numberOfDataSets; i++){
       console.log("Num",i);
       console.log(noOfSpecimens[i])
-      // const value = parseInt(1, 10);
-      // const newArray = Array.from({ length: value }, () => [{}, {}]);
-      // setDynamicArray(newArray);
       InputTags.push(
           <div className="upload_data_wrapper">
               <div className="upload_data_container">
@@ -622,7 +616,6 @@ function ISO527({isClickedNext}) {
                 <div className="btn" onClick={saveData}>
                   Save
                 </div>
-                {/* <div className="btn" onClick={nextTestStandard} ref={scrollToResult}>Next</div> */}
               </div>
     </>
   )
