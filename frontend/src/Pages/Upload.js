@@ -338,17 +338,19 @@ import Nav from '../Components/Nav'
 import BaseMaterialinfo from './UPLOAD/BaseMaterialinfo';
 import TestStandards from './UPLOAD/TestStandards';
 import '../Styles/Pages/Upload.css'
+import { useSelector } from 'react-redux';
 
 let next=0;
 function Upload() {
   // Click Previous and Next 
   const formElement = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
+  const {currentUser} = useSelector(state => state.user)
 
   const nextPage = next
   const formPages = [
-    <BaseMaterialinfo isClickedNext={next}/>,
-    <TestStandards />
+    <BaseMaterialinfo isClickedNext={next} />,
+    <TestStandards isClickedNext={next} />
   ];
   const formname = [
     "Base material info",
@@ -361,33 +363,16 @@ function Upload() {
     }
   }
 
-  const [isSticky, setIsSticky] = useState(false);
+  const submitForm = async(e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const stickySectionOffsetTop = document.getElementById('sticky-section').offsetTop;
-
-        if (scrollTop >= stickySectionOffsetTop) {
-          setIsSticky(true);
-        } else {
-          setIsSticky(false);
-        }
-     };
-
-      window.addEventListener('scroll', handleScroll);
-
-      return() => {
-        window.removeEventListener('scroll', handleScroll);
-      };
-  }, []);
-
+  }
   
   return (
     <>
       <Nav />
       <div className="form_header">
-        <div id="sticky-section" className="form_header_container" style={{ position: isSticky ? 'fixed' : 'relative', top: isSticky ? 0 : 'auto' }}>
+        <div id="sticky-section" className="form_header_container">
         {
           formname.map((e, _i) => (
             <div className="page_name" ref={formElement} onClick={() => goToFormPage(_i)} key={_i}>
@@ -402,11 +387,14 @@ function Upload() {
         </div>
       
       </div>
-        <BaseMaterialinfo  isClickedNext={next}/>
-        <TestStandards />
-      {/* {
-        formPages[currentPage]
-      } */}
+        {/* <BaseMaterialinfo  isClickedNext={next}/>
+        <TestStandards /> */}
+      <form onSubmit={submitForm}>
+        {
+          formPages[currentPage]
+        }
+        <button type='submit'>submit</button>
+      </form>
     </>
   )
 }

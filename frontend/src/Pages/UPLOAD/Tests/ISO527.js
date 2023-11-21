@@ -1,15 +1,16 @@
-import React, { Children, Fragment, useEffect, useState } from 'react'
+import React, { Children, Fragment, useEffect, useMemo, useState } from 'react'
 import "../../../Styles/Pages/Test.css"
 import { useDispatch } from 'react-redux'
 import { testStandardInfo } from '../../../features/uploadSlice'
 import * as XLSX from "xlsx";
 
-function ISO527() {
+var table = {
+
+}
+
+function ISO527({isClickedNext}) {
   const arr = []
-  const dispatch = useDispatch()
-  const [numberOfDataSets, setNumberOfDataSets] = useState(0)
-  const [specimenClicked, setSpecimenClicked] = useState(false)
-  const [testData, setTestData] = useState({
+  const [formData, setFormData] = useState({
     testStandard:"ISO527",
     SpecimenType:"",
     L0:0,
@@ -26,23 +27,26 @@ function ISO527() {
         y:[]
       },
     ]
-  });
+  })
+  const dispatch = useDispatch()
+  const [numberOfDataSets, setNumberOfDataSets] = useState(0)
+  const [specimenClicked, setSpecimenClicked] = useState(false)
 
   useEffect(() => {
-    if(testData.SpecimenType === "1A"){
-      setTestData({...testData, L0:75, h:4})
+    if(formData.SpecimenType === "1A"){
+      setFormData({...formData, L0:75, h:4})
     }
 
-    if(testData.SpecimenType === "1B"){
-      setTestData({...testData, L0:50, h:4})
+    if(formData.SpecimenType === "1B"){
+      setFormData({...formData, L0:50, h:4})
     }
 
-  }, [testData.SpecimenType])
+  }, [formData.SpecimenType])
 
   // Add DataSheet
   const [isaddDataSheet, setIsAddDataSheet] = useState(false) 
   const addDataSheet = () => {
-    if(testData.L0 ==0 || testData.h==0 ){
+    if(formData.L0 ==0 || formData.h==0 ){
       alert("Enter L0 and h values")
     }else{
       setIsAddDataSheet(true)
@@ -208,32 +212,32 @@ function ISO527() {
   }
 
   const saveData = async() => {
-    await dispatch(testStandardInfo(testData))
+    await dispatch(testStandardInfo(formData))
   }
 
 
   useEffect(() => {
-    setTestData({...testData, temp:temperature})
+    setFormData({...formData, temp:temperature})
   },[ temperature])
 
   useEffect(() => {
-    setTestData({...testData, NumberOf_Specimens:noOfSpecimens})
+    setFormData({...formData, NumberOf_Specimens:noOfSpecimens})
   },[ noOfSpecimens])
 
   useEffect(() => {
-    setTestData({...testData, conditioned:conditioned})
+    setFormData({...formData, conditioned:conditioned})
   },[ conditioned])
 
   useEffect(() => {
-    setTestData({...testData, CrossHeadSpeed:crossHeads})
+    setFormData({...formData, CrossHeadSpeed:crossHeads})
   },[crossHeads])
 
   useEffect(() => {
-    setTestData({...testData, x_axis:x_axis})
+    setFormData({...formData, x_axis:x_axis})
   },[ x_axis])
 
   useEffect(() => {
-    setTestData({...testData, y_axis:y_axis})
+    setFormData({...formData, y_axis:y_axis})
   },[ y_axis])
 
 
@@ -258,29 +262,48 @@ function ISO527() {
 
 // 
   const [userInput, setUserInput] = useState(0);
-  const [dynamicArray, setDynamicArray] = useState([]);
   const [nextClicked, setNextClicked] = useState(false)
-  const uploadDataset = () => {
-    // dispatch(uploadDataset(testData))
-    setNextClicked(true)
-  }
-
-  console.log(dynamicArray)
   // CREATE FIELD FOR EACH SPECIMENS
+  const createDynamicObject = (index) => ({
+    [index]:[[], []]
+  }); //Create Dynamic Array 
+  const [dynamicArray, setDynamicArray] = useState({});
+  const uploadDataset = (NumberOf_Specimens , numberOf_Rows) => {
+    console.log(NumberOf_Specimens, numberOf_Rows)
+    setNextClicked(true);
+    const obj =new Object;
+    for(let i=0; i<NumberOf_Specimens.length; i++){
+      let b={};
+      for(let j=0; j<NumberOf_Specimens[i]; j++){
+        const newObject = createDynamicObject(j);;
+        b[j] =Object.assign(newObject)
+        console.log(i, j, b)
+      }
+      obj[i] = b;
+    }
+    console.log(obj)
+    setDynamicArray(obj)
+  }
+  console.log(dynamicArray)
   const [excelData, setExcelData] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
   const [tableData, setTableData] = useState({});
 
   console.log("Talbe", tableData)
-  const   handleInputChange = (e, rowIndex, axis) => {
+  const [arrayData, setArrayData] = useState([]);
+
+  const  handleInputChange = (e, rowIndex, axis, i, index) => {
+    const newArrayData = [];
+    console.log(index+1, i+1, axis, rowIndex+1, e.target.value)
+    
+    console.log(arrayData)
     const newData = [...excelData];
     newData[rowIndex][axis] = e.target.value;
-    setExcelData(newData);
-    setTableData( {
-      ...tableData,
-
-    })
+    // setExcelData(newData);
+    // setTableData( {
+    //   ...tableData,
+    // })
   };
 
   const handleUserInput = (numRows) => {
@@ -323,16 +346,17 @@ function ISO527() {
   };
   console.log(excelData)
 
+
   // Create Upload Dataset Code;
   const specimensInput = (index) => {
     const InputTags = []
     var j=1;
     for(let i=0; i<noOfSpecimens[index]; i++){
-      const value =  parseInt(noOfSpecimens[index], 10);
-      arr.push(Array.from({ length: value }, () => [{}, {}]))
-      // console.log(newArray)
-      // arr.push(newArray)
-      console.log(arr)
+      // const value =  parseInt(noOfSpecimens[index], 10);
+      // arr.push(Array.from({ length: value }, () => [{}, {}]))
+      // // console.log(newArray)
+      // // arr.push(newArray)
+      // console.log(arr)
       InputTags.push(
         <div className="upload_data_section">
             {excelData.length > 0 && (
@@ -353,17 +377,20 @@ function ISO527() {
                         <td>
                           <input
                             type="text"
-                            value={row.x_axis}
-                            onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
-                            onChange={(e) => handleInputChange(e, rowIndex, 'x_axis')}
+                            // value={row.x_axis}
+                            // onChange={(e) => {
+                            //   console.log(row, rowIndex)
+                            // }}
+                            // onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
+                            onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
                           />
                         </td>
                         <td>
                           <input
                             type="text"
-                            value={row.y_axis}
-                            onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
-                            onChange={(e) => handleInputChange(e, rowIndex, 'y_axis')}
+                            // value={row.y_axis}
+                            // onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
+                            onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
                           />
                         </td>
                       </tr>
@@ -423,7 +450,7 @@ function ISO527() {
             <div className="test_wrapper">
               <div className="test_content_item">
                 <select onChange={(e) =>{
-                    setTestData({...testData, SpecimenType:e.target.value});
+                    setFormData({...formData, SpecimenType:e.target.value});
                     setSpecimenClicked(true)
                   } 
                 }>
@@ -435,16 +462,16 @@ function ISO527() {
               </div>
                 {
                   specimenClicked && (
-                    testData.SpecimenType !== "Custom" ? 
+                    formData.SpecimenType !== "Custom" ? 
                     (
-                      testData.SpecimenType === "1A" ? (
+                      formData.SpecimenType === "1A" ? (
                         <div className="test_content_item">
                           <div className="content_item">
                             <span>
-                              L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, L0:e.target.value})} placeholder='75' />
+                              L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, L0:e.target.value})} placeholder='75' />
                             </span>
                             <span>
-                              h <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, h:e.target.value})} placeholder='4' />
+                              h <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, h:e.target.value})} placeholder='4' />
                             </span>
                           </div>
                         </div>
@@ -454,10 +481,10 @@ function ISO527() {
                         <div className="test_content_item">
                           <div className="content_item">
                             <span>
-                              L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, L0:e.target.value})} placeholder="50" />
+                              L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, L0:e.target.value})} placeholder="50" />
                             </span>
                             <span>
-                              h <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, h:e.target.value})} placeholder='4' />
+                              h <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, h:e.target.value})} placeholder='4' />
                             </span>
                           </div>
                         </div>
@@ -468,10 +495,10 @@ function ISO527() {
                       <div className="test_content_item">
                         <div className="content_item">
                           <span>
-                            L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, L0:e.target.value})} />
+                            L0 <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, L0:e.target.value})} />
                           </span>
                           <span>
-                            h <sub>(mm)</sub>: <input type="number" onChange={(e) => setTestData({...testData, h:e.target.value})} />
+                            h <sub>(mm)</sub>: <input type="number" onChange={(e) => setFormData({...formData, h:e.target.value})} />
                           </span>
                         </div>
                       </div>
@@ -574,7 +601,7 @@ function ISO527() {
         </form>
 
         <div className="next">
-            <div className="btn" onClick={uploadDataset}>
+            <div className="btn" onClick={() => uploadDataset(formData.NumberOf_Specimens, userInput)}>
              Next
             </div>
         </div>

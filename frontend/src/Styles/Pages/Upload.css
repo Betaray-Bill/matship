@@ -10,7 +10,7 @@
     width: 100vw;
     display: flex;
     align-items: center;
-    position: fixed;
+    /* position: fixed; */
     text-align: center;
     padding-left: 30%;
     z-index: 1000;
