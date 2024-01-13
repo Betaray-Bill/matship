@@ -7,44 +7,44 @@ const masterSchema = mongoose.Schema(
     },
     productName:{
       type:String,
-      required:true,
+      // required:true,
       unique:true
     },
     MasterClass: {
       type: String,
-      required: true,
+      // required: true,
     },
     subClass: {
       type: String,
-      required: true,
+      // required: true,
     },
     Family:{
         type: String,
-        required: true
+        // required: true
     },
     Sustainability:{
         type: String,
-        required: true
+        // required: true
     },
     Filler:{
         type: String,
-        required: true
+        // required: true
     },
     DeliveryForm:{
         type: String,
-        required: true
+        // required: true
     },
     SpecimenType:{
       type: String,
-      required: true
+      // required: true
     },
     h:{
       type:Number,
-      required:true
+      // required:true
     },
     L0:{
       type:Number,
-      required:true
+      // required:true
     },
     temperature:[
       {
@@ -53,7 +53,7 @@ const masterSchema = mongoose.Schema(
     ],
     conditioned:[
       {
-        type:Number
+        type:String
       }
     ],
     NumberOf_Specimens:[
@@ -68,12 +68,17 @@ const masterSchema = mongoose.Schema(
     ],
     X_axis_Type:[
       {
-        type:Number
+        type:String
       }
     ],
     Y_axis_Type:[
       {
-        type:Number
+        type:String
+      }
+    ],
+    dataSetValue:[
+      {
+        type:String
       }
     ]
   }

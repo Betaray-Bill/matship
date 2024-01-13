@@ -3,10 +3,8 @@ import "../../../Styles/Pages/Test.css"
 import { useDispatch } from 'react-redux'
 import { testStandardInfo } from '../../../features/uploadSlice'
 import * as XLSX from "xlsx";
-
-var table = {
-
-}
+import Table from './TestComponents/Table';
+import Temperature from './ISO527/Components/Temperature';
 
 function ISO527({isClickedNext}) {
   const [dynamicArray, setDynamicArray] = useState([]);
@@ -21,7 +19,7 @@ function ISO527({isClickedNext}) {
     CrossHeadSpeed:[],
     x_axis:[],
     y_axis:[],
-    dataSetValue:[    ]
+    dataSetValue:[]
   })
   const dispatch = useDispatch()
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
@@ -37,6 +35,51 @@ function ISO527({isClickedNext}) {
     }
 
   }, [formData.SpecimenType])
+
+  // To ALL
+  function toAll(test){
+    console.log("test", test)
+
+    if(test === "Temperature"){
+      console.log(temperature.length)
+      if(temperature.length == 0){
+        alert("Enter atleast one value")
+      }else{
+        console.log(temperature[temperature.length-1])
+        let s = temperature.length-1;
+        let lastValue = temperature[temperature.length-1];
+        console.log(lastValue, s)
+        for(let i=s; i<numberOfDataSets; i++){
+          setTemperature((prevInputValues) => {
+            const newInputValues = [...prevInputValues];
+            newInputValues[i] = lastValue
+            return newInputValues;
+          });
+        }
+        console.log(temperature)
+      }
+    }
+
+    // if(test == "Conditioned"){
+    //   console.log(conditioned.length)
+    //   if(conditioned.length == 0){
+    //     alert("Enter atleast one value")
+    //   }else{
+    //     console.log(conditioned[conditioned.length-1])
+    //     let s = conditioned.length-1;
+    //     let lastValue = conditioned[conditioned.length-1];
+    //     console.log(lastValue, s)
+    //     for(let i=s; i<numberOfDataSets; i++){
+    //       setConditioned((prevInputValues) => {
+    //         const newInputValues = [...prevInputValues];
+    //         newInputValues[i] = lastValue
+    //         return newInputValues;
+    //       });
+    //     }
+    //     console.log(conditioned)
+    //   }
+    // }
+  }
 
   // Add DataSheet
   const [isaddDataSheet, setIsAddDataSheet] = useState(false) 
@@ -60,10 +103,10 @@ function ISO527({isClickedNext}) {
         <div key={i} className='test_data_box'>
             {/* <p>D{i+1}</p> */}
             <input 
-              key={i} type="Number" onChange={(event) => {
+              key={i} type="number" onChange={(event) => {
                 setTemperature((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] = Number(event.target.value)
                   return newInputValues;
                 });
               }} 
@@ -73,6 +116,10 @@ function ISO527({isClickedNext}) {
     }
     return inputTags;
   };
+  useEffect(() => {
+    console.log("ama da")
+  }, [temperature]  )
+
 
   // Create Conditioned Input Fields
   const [conditioned, setConditioned] = useState([]);
@@ -83,10 +130,10 @@ function ISO527({isClickedNext}) {
         <div key={i} className='test_data_box'>
             {/* <p>D{i+1}</p> */}
             <select 
-              key={i} type="Number" onChange={(event) => {
+              key={i} type="number" onChange={(event) => {
                 setConditioned((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] = event.target.value
                   return newInputValues;
                 });
               }} 
@@ -109,10 +156,10 @@ function ISO527({isClickedNext}) {
       inputTags.push(
         <div key={i} className='test_data_box'>
             <input 
-              key={i} type="Number" onChange={(event) => {
+              key={i} type="number" onChange={(event) => {
                 setNoOfSpecimens((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] = Number(event.target.value);
                   return newInputValues;
                 });
               }} 
@@ -131,10 +178,10 @@ function ISO527({isClickedNext}) {
       inputTags.push(
         <div key={i} className='test_data_box'>
             <input 
-              key={i} type="Number" onChange={(event) => {
+              key={i} type="number" onChange={(event) => {
                 setCrossHeads((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] =event.target.value
                   return newInputValues;
                 });
               }} 
@@ -157,7 +204,7 @@ function ISO527({isClickedNext}) {
               key={i} type="text" onChange={(event) => {
                 setX_axis((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] = event.target.value
                   return newInputValues;
                 });
               }} 
@@ -184,7 +231,7 @@ function ISO527({isClickedNext}) {
               key={i} type="text" onChange={(event) => {
                 setY_axis((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value;
+                  newInputValues[i] = event.target.value
                   return newInputValues;
                 });
               }} 
@@ -208,7 +255,7 @@ function ISO527({isClickedNext}) {
 
   const saveData = async() => {
     await setFormData({...formData, dataSetValue:dynamicArray})
-    console.log(formData)
+    // console.log(formData)
     await dispatch(testStandardInfo(formData))
   }
 
@@ -239,28 +286,13 @@ function ISO527({isClickedNext}) {
 
   useEffect(() => {
     setFormData({...formData, dataSetValue:dynamicArray})
+    console.log(setFormData)
   },[ dynamicArray])
 
 
-  // Handling Files
-  // const [data, setData] = useState([]);
-
-  // const handleFileUpload = (e) => {
-  //   const reader = new FileReader();
-  //   reader.readAsBinaryString(e.target.files[0]);
-  //   reader.onload = (e) => {
-  //     const data = e.target.result;
-  //     const workbook = XLSX.read(data, { type: "binary" });
-  //     const sheetName = workbook.SheetNames[0];
-  //     const sheet = workbook.Sheets[sheetName];
-  //     const parsedData = XLSX.utils.sheet_to_json(sheet);
-  //     setData(parsedData);
-  //     console.log(parsedData)
-  //   };
-  // }
 
 // 
-  const [userInput, setUserInput] = useState(0);
+  const [userInput, setUserInput] = useState(1);
   const [nextClicked, setNextClicked] = useState(false)
   // CREATE FIELD FOR EACH SPECIMENS
   const createDynamicObject = (index) => ({
@@ -268,7 +300,7 @@ function ISO527({isClickedNext}) {
   }); //Create Dynamic Array 
   // upload Dataset to Redux and create a 
   const uploadDataset = (NumberOf_Specimens , numberOf_Rows) => {
-    console.log(NumberOf_Specimens, numberOf_Rows)
+    // console.log(NumberOf_Specimens, numberOf_Rows)
     setNextClicked(true);
     const obj =new Object;
     for(let i=0; i<NumberOf_Specimens.length; i++){
@@ -279,37 +311,40 @@ function ISO527({isClickedNext}) {
       }
       obj[i] = b;
     }
-    console.log(obj)
+    // console.log(obj)
     setDynamicArray(obj)
   }
   
-  console.log(dynamicArray)
+  // console.log(dynamicArray)
   const [excelData, setExcelData] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
   const [yAxisData, setYAxisData] = useState([]);
   const [tableData, setTableData] = useState({});
 
-  console.log("Talbe", tableData)
+  // console.log("Talbe", tableData)
   const [arrayData, setArrayData] = useState([]);
 
   function insertOrUpdateAtIndex(myArray, indexToInsert, newValue) {
     if (indexToInsert >= 0 && indexToInsert < myArray.length) {
       myArray.splice(indexToInsert, 1, newValue);
+      console.log(myArray)
     } else {
       myArray.splice(myArray.length, 0, newValue);
     }
   }
 
   const  handleInputChange = (e, rowIndex, axis, i, index) => {
-    console.log(index+1, i+1, axis, rowIndex+1, e.target.value)
+    // console.log(index+1, i+1, axis, rowIndex+1, e)
       const n = dynamicArray;
+      console.log(dynamicArray)
       if(axis === 'x_axis'){
-        insertOrUpdateAtIndex(n[index][i][i][0], rowIndex, e.target.value)
+        insertOrUpdateAtIndex(n[index][i][i][0], rowIndex,Number(e.target.value))
       }else{
-        insertOrUpdateAtIndex(n[index][i][i][1], rowIndex, e.target.value)
+        insertOrUpdateAtIndex(n[index][i][i][1], rowIndex,Number(e.target.value))
       }
-    console.log(n)
+    // console.log(n)
     setDynamicArray(n)
+    console.log(n)
     console.log(arrayData)
   };
 
@@ -320,22 +355,39 @@ function ISO527({isClickedNext}) {
       newData.push({ x_axis: '', y_axis: '' });
     }
     setExcelData(newData);
-    console.log(newData)
   };
 
-  const handlePaste = (e, rowIndex, axis) => {
-    e.preventDefault();
+  // paste
+  function insertOrUpdateAtIndexForPasting(myArray, indexToInsert, newValue) {
+    if (indexToInsert >= 0 && indexToInsert < myArray.length) {
+      myArray.splice(indexToInsert, 1, newValue);
+      console.log(myArray)
+    } else {
+      myArray.splice(myArray.length, 0, newValue);
+    }
+  }
+
+  const handlePaste = async(e, rowIndex, axis , i, index) => {
+    const n = dynamicArray;
+    console.log(dynamicArray)
     const clipboardData = e.clipboardData || window.clipboardData;
     const pastedData = clipboardData.getData('text').split('\n');
-    
-    const newData = [...excelData];
-    pastedData.forEach((value, index) => {
-      if (newData[rowIndex + index]) {
-        newData[rowIndex + index][axis] = value;
+    const rows = pastedData.length
+    console.log("Pasted")
+    await handleUserInput(rows)
+    pastedData.forEach((ind, inde) => {
+      console.table(index+1, i+1, axis, rowIndex+1, Number(ind))
+      if(axis === 'x_axis'){
+        console.log(ind)
+        insertOrUpdateAtIndexForPasting(n[index][i][i][0], inde, Number(ind))
+      }else{
+        insertOrUpdateAtIndexForPasting(n[index][i][i][1], inde, Number(ind))
+        console.log(ind)
       }
-    });
-    
-    setExcelData(newData);
+      console.log(n[index][i][i])
+    })
+    console.log(n)
+    await setDynamicArray(n)
   };
 
   const handleSubmit = (e) => {
@@ -345,13 +397,12 @@ function ISO527({isClickedNext}) {
 
     setXAxisData(xValues);
     setYAxisData(yValues);
-
-    // Do something with xValues and yValues if needed
-    console.log('X Axis Data:', xValues);
-    console.log('Y Axis Data:', yValues);
   };
-  console.log(excelData)
 
+  useEffect(() => {
+    console.log("object")
+    setDynamicArray(dynamicArray)
+  }, [dynamicArray])
 
   // Create Upload Dataset Code;
   const specimensInput = (index) => {
@@ -365,11 +416,12 @@ function ISO527({isClickedNext}) {
                 <h3>
                   Specimen {j}
                 </h3>
+                {/* 
                 <table border="1">
                   <thead>
                     <tr>
-                      <th>X Axis</th>
-                      <th>Y Axis</th>
+                      <th>{formData.x_axis[index]}</th>
+                      <th>{formData.y_axis[index]}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -377,22 +429,32 @@ function ISO527({isClickedNext}) {
                       <tr key={rowIndex}>
                         <td>
                           <input
-                            type="text"
-                            // onPaste={(e) => handlePaste(e, rowIndex, 'x_axis')}
-                            onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
+                            type="number"
+                            value={dynamicArray[index][i][i][0][rowIndex]}
+                            // onPaste={(e) => handlePaste(e,rowIndex, 'x_axis', i, index)}
+                            // onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
                           />
                         </td>
                         <td>
                           <input
-                            type="text"
-                            // onPaste={(e) => handlePaste(e, rowIndex, 'y_axis')}
-                            onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
+                            type="number"
+                            value={dynamicArray[index][i][i][1][rowIndex]}
+                            // onPaste={(e) => handlePaste(e,rowIndex, 'y_axis', i, index)}
+                            // onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
                           />
                         </td>
                       </tr>
                     ))}
                   </tbody>
-                </table>
+                </table> 
+                */}
+                <Table 
+                  sno={j} index={index} 
+                  y_axis={formData.y_axis[index]} 
+                  x_axis={formData.x_axis[index]}
+                  // sendToParent={}
+                  excelData={excelData}
+                />
               </div>
             )}
         </div>
@@ -405,8 +467,8 @@ function ISO527({isClickedNext}) {
   const createUploadDataset = () => {
     const InputTags = []
     for(let i=0; i<numberOfDataSets; i++){
-      console.log("Num",i);
-      console.log(noOfSpecimens[i])
+      // console.log("Num",i);
+      // console.log(noOfSpecimens[i])
       InputTags.push(
           <div className="upload_data_wrapper">
               <div className="upload_data_container">
@@ -528,18 +590,19 @@ function ISO527({isClickedNext}) {
           isCreateClicked ? 
           (
             <div className="test_container">
+              
               <>
                 <div className="test_container_box">
-                  <p><ion-icon name="add-outline"></ion-icon> Temperature(c)</p>
-                  <div className="test_container_inputs">
-                    {isCreateClicked ? createTemperatureTags() : ""}
-                  </div>
+                  <Temperature numberOfDataSets={numberOfDataSets} />
                 </div>
               </>
 
               <>
                 <div className="test_container_box">
                   <p><ion-icon name="add-outline"></ion-icon> Conditioned</p>
+                  <div className="all" onClick={() => toAll("Conditioned")}>
+                    all
+                  </div>
                   <div className="test_container_inputs">
                     {isCreateClicked ? createConditionedTags() : ""}
                   </div>
@@ -585,16 +648,16 @@ function ISO527({isClickedNext}) {
           ):""
         }
         <form onSubmit={handleSubmit}>
-          <label>
+          {/* <label>
             Number of Rows:
             <input type="number" value={excelData.length} onChange={(e) => handleUserInput(e.target.value)} />
-          </label>
+          </label> */}
           <br />
           {/* <button type='submit'>submit</button> */}
         </form>
 
         <div className="next">
-            <div className="btn" onClick={() => uploadDataset(formData.NumberOf_Specimens, userInput)}>
+            <div className="btn" onClick={() => {uploadDataset(formData.NumberOf_Specimens, userInput); handleUserInput(1)}}>
              Next
             </div>
         </div>
@@ -611,11 +674,13 @@ function ISO527({isClickedNext}) {
         )
       }
     </div>
-      `       <div className="next">
-                <div className="btn" onClick={saveData}>
-                  Save
-                </div>
-              </div>
+    <div className="next">
+      <div className="btn" onClick={saveData}>
+        Save
+      </div>
+    </div>
+
+
     </>
   )
 }

@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
 
 
-function Maindropdown({data, name, sendToParent, removeFromParent}) {
+function Maindropdown({data, name,isReset, sendToParent, removeFromParent}) {
  
     const [value, setvalue] = useState([]);
     const [isDroped, setIsDroped] = useState(false);
+
+    useEffect(() => {
+        if(isReset === true){
+            setvalue([]);
+        }
+    }, [isReset])
 
     const handleChange = (e) => {
         const isChecked = e.target.checked;
@@ -20,8 +26,6 @@ function Maindropdown({data, name, sendToParent, removeFromParent}) {
             // Send data to the Parent Component to remove that Unchecked Value
             removeFromParent(val)
         }
-        // console.log("Value",value)
-        // sendToParent(val)
     }
 
     const resetField = () => {
@@ -31,19 +35,11 @@ function Maindropdown({data, name, sendToParent, removeFromParent}) {
 
   return (
     <div>
-        {/*                 {
-                                Array.from(data).map((key,value) => (
-                                    <span>
-                                        <h3>{key[0]} : {key[1]}</h3>
-                                    </span>
-                                ))
-                            } 
-        */}
         <div className="dropdown_box">
                 <div className="dropdown_header_section">
                    <div className="dropdown_header" onClick={() => setIsDroped(!isDroped)}>
                             {
-                                value.length>0 ? value.join(",") : name
+                                isReset ? (value.length>0 ? value.join(",") : name) : name
                             }
                         <div className="dropdown_icon">
                             {

@@ -365,7 +365,7 @@ function Upload() {
 
   const submitForm = async(e) => {
     e.preventDefault();
-    var obj = {...basematerialInfo, ...testStandard}
+    var obj = await {...basematerialInfo, ...testStandard}
     try{
       const res = await fetch("/api/materials/addMaterial", {
         method:'POST',

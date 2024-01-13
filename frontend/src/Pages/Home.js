@@ -159,6 +159,7 @@ function Home() {
         const {data} = await axios.get('api/materials/getall')
         await setDatas(data)
         m = data;
+        setIsReset(false)
         setresult([])
         setIsUsedFilter(false);
         setresultStr(null)
@@ -213,9 +214,9 @@ function Home() {
                                 ))
                             }
                             <form>
-                                <Maindropdown data={classMap} name={"Master Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
-                                <Maindropdown data={subclassMap} name={"Sub Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
-                                <Maindropdown data={familyMap} name={"Family"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown isReset={isReset} data={classMap} name={"Master Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown isReset={isReset} data={subclassMap} name={"Sub Class"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
+                                <Maindropdown isReset={isReset} data={familyMap} name={"Family"} sendToParent={handleFilter} removeFromParent={handleRemove}/>
                             </form>
                         </div>
                         

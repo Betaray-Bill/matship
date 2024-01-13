@@ -208,8 +208,6 @@
     grid-gap: 25px;
     place-content: center;
 }
-.upload_data_section{
-}
 
 .upload_data_table{
     max-height: 50vh;
@@ -225,16 +223,20 @@
     width: max-content;
     border-radius: 12px;
     padding: 4px;
+    /* overflow-y: scroll; */
     display: inline-block;
 }
 thead, tbody{
     border: none;
     outline: none;
 }
+table{
+    overflow-y: scroll;
+}
 th, td {
     border:1px solid #505dd633;
     padding: 4px;
-    border-radius: 9px;
+    /* border-radius: 9px; */
 }
 th{
     border:1px solid #000;
@@ -244,4 +246,32 @@ th{
     border-radius: 9px;
     outline: none;
     border: none;
+}
+
+.setAll{
+    display: flex;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: #a8c7fa;
+    /* width: max-content; */
+    font-size: 18px;
+    color: black;
+    border-radius: 16px;
+    transition: all 400ms ease-in-out;
+    margin-left: 40px;
+    cursor: pointer;
+}
+
+.setAll ion-icon{
+    font-size: 18px;
+    margin-left: 20px;
+}
+
+.setAll:hover{
+    transition: all 400ms ease-in-out;
+}
+
+.comp_header{
+    display: flex;
+    align-items: center;
 }

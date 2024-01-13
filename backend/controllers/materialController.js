@@ -6,12 +6,12 @@ import { Company, CompanyEntity } from "../models/companyEntity.js";
 // get Single Product - GET - /getsingleproduct - Search Materials DB
 const getSingleMaterial = asyncHandler(async(req, res) => {
     const query = req.params.material;
-    console.log(query)
+    // console.log(query)
     try{
         const getMaterial = await masterClass.findOne({
             productName:query
         })
-        console.log(getMaterial)
+        // console.log(getMaterial)
         res.status(200).json({getMaterial})
     }catch(error){
         console.error(error);
@@ -21,8 +21,15 @@ const getSingleMaterial = asyncHandler(async(req, res) => {
 
 // add Material - POST - /addmaterials - to Company Entity
 const addMaterial = asyncHandler(async(req, res) => {
-    const { isLegacy, MasterClass, subClass, Family, companyEntity , Sustainability, Filler, DeliveryForm, productName, company } = req.body;
-
+    const { 
+        isLegacy, MasterClass, subClass, 
+        Family, companyEntity , Sustainability,
+        Filler, DeliveryForm, productName, company, 
+        L0, h, CrossHeadSpeed, NumberOf_Specimens, 
+        x_axis, y_axis, conditioned,
+        temp,dataSetValue
+    } = req.body;
+    console.log(req.body)
     const companyEntityExists = await CompanyEntity.findOne({name:companyEntity})
 
     if(!companyEntityExists){
@@ -38,12 +45,26 @@ const addMaterial = asyncHandler(async(req, res) => {
         Sustainability,
         Filler,
         DeliveryForm,
+        L0, 
+        h, 
+        CrossHeadSpeed, 
+        NumberOf_Specimens, 
+        X_axis_Type:x_axis, 
+        Y_axis_Type:y_axis, 
+        conditioned, 
+        temperature:temp,
+        // dataSetValue
     })
     await product.save();
 
     try{
-        console.log(productName, companyEntityExists)
+        // console.log(productName, companyEntityExists)
         if(isLegacy){
+            if(companyEntityExists.Legacymaterials.includes(productName)){
+                return res.json({
+                    error:"Material already exits"
+                })
+            }
             await companyEntityExists.Legacymaterials.push(productName);
             await companyEntityExists.save()
         }else{
@@ -77,7 +98,7 @@ const updateMaterial = asyncHandler(async(req, res) => {
 
 // get data from a single company - GET - /:companyEntity/getAllProducts
 const getProductCompany = asyncHandler(async(req, res) => {
-    console.log(req.params.company);
+    // console.log(req.params.company);
     const companyExists = await CompanyEntity.findOne({name:req.params.company});
     if(!companyExists){
         res.status(500);
@@ -98,9 +119,9 @@ const getProductCompany = asyncHandler(async(req, res) => {
 
 // get all data
 const getAllData = asyncHandler(async(req, res) => {
-    console.log("meoowssss")
+    // console.log("meoowssss")
     const result = await masterClass.find({})
-    console.log(result)
+    // console.log(result)
     res.status(200).json(result)
 })
 
@@ -108,20 +129,22 @@ const getAllData = asyncHandler(async(req, res) => {
 const getGlobalSearch =asyncHandler( async(req, res) => {
     const search = req.body
     console.log(req.params)
+    const s = req.params.search.split(' ')
+    console.log(s)
     const ans = await masterClass.aggregate([
         {
             $search: {
             index: "masterclasses",
             text: {
-                query: req.params.search,
+                query: s.join(' '),
                 path: {
                     wildcard: "*"
                     }
                 }
             }
-        }
+        },
     ])
-    console.log(ans)
+    console.log("SNSSSSSSSSSSS",ans)
 
     res.status(200).json(ans)
 })
