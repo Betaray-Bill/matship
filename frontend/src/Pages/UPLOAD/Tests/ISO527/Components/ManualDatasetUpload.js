@@ -65,6 +65,7 @@ function ManualDatasetUpload({DataSet, noOfSpecimens, x_axis, y_axis}) {
     useEffect(() => {
         console.log("NEww", dataSetValue)
     }, [dataSetValue])
+
   return (
     <div className="upload_data_wrapper">
         <div className="upload_data_container">
@@ -77,10 +78,10 @@ function ManualDatasetUpload({DataSet, noOfSpecimens, x_axis, y_axis}) {
             }
             </div>
             <div className="plot">
-                <p className='btn' onClick={() => setIsplot(!isPlot)}>Plot</p>
+                <p className='btn' onClick={() => {setIsplot(!isPlot)}}>Plot</p>
             </div>
            {
-            isPlot &&  <Chart />
+            isPlot &&  <Chart data={dataSetValue} dataset={DataSet+1} />
            }
         </div>
     </div>
