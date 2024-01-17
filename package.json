@@ -25,6 +25,7 @@
     "mongodb": "4.0",
     "mongoose": "^7.5.2",
     "nodemon": "^3.0.1",
+    "react-chartjs-2": "^5.2.0",
     "react-redux": "^8.1.2",
     "react-scripts": "^5.0.1",
     "redux-persist": "^6.0.0",

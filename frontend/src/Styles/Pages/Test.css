@@ -253,18 +253,17 @@ th{
     align-items: center;
     padding: 4px 10px;
     background-color: #a8c7fa;
-    /* width: max-content; */
     font-size: 18px;
     color: black;
-    border-radius: 16px;
+    border-radius: 40px;
     transition: all 400ms ease-in-out;
-    margin-left: 40px;
+    margin-left: 15px;
     cursor: pointer;
 }
 
 .setAll ion-icon{
-    font-size: 18px;
-    margin-left: 20px;
+    font-size: 20px;
+    /* margin-left: -30px; */
 }
 
 .setAll:hover{
@@ -274,4 +273,13 @@ th{
 .comp_header{
     display: flex;
     align-items: center;
+}
+
+.test_data_box {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: start;
+    /* background-color: #505dd6; */
+    /* width: max-content; */
 }

@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { useState } from 'react';
 
-function Temperature({numberOfDataSets}) {
+function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
     // Create Temperature Input Fields
     const [temperature, setTemperature] = useState(Array(numberOfDataSets).fill(null));
     
@@ -10,21 +10,28 @@ function Temperature({numberOfDataSets}) {
         for (let i = 0; i < numberOfDataSets; i++) {
         inputTags.push(
             <div key={i} className='test_data_box'>
-                {/* <p>D{i+1}</p> */}
                 <input className='temp_input'
-                key={i} type="number" onChange={(event) => {
-                    setTemperature((prevInputValues) => {
-                    const newInputValues = [...prevInputValues];
-                    newInputValues[i] = Number(event.target.value)
-                    return newInputValues;
-                    });
-                }} 
+                    key={i} type="number" onChange={(event) => {
+                        setTemperature((prevInputValues) => {
+                        const newInputValues = [...prevInputValues];
+                        newInputValues[i] = Number(event.target.value)
+                        return newInputValues;
+                        });
+                    }} 
                 />
+                {
+                    i == 0 ? 
+                    <div className="setAll" onClick={setAll}>
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </div> : ""
+                }
             </div>
         );
         }
         return inputTags;
     };
+
+   
 
     // Set All
     const setAll = () => {  
@@ -40,12 +47,13 @@ function Temperature({numberOfDataSets}) {
     }
 
     useEffect(() => {
-        const get = document.getElementsByClassName("temp_input")
-        console.log(get.length)
+        const getInputTags = document.getElementsByClassName("temp_input")
+        console.log(getInputTags.length)
         // updates the Temperature Input tag
         for(let i=0; i<temperature.length; i++){
-            get[i].value = temperature[i]
+            getInputTags[i].value = temperature[i]
         }
+        console.log(temperature)
     }, [temperature])
 
   return (
@@ -53,22 +61,25 @@ function Temperature({numberOfDataSets}) {
 
         <div className="comp_header">
             <p>
-                <ion-icon name="add-outline"></ion-icon> Temperature(c)
+                <ion-icon name="add-outline"></ion-icon> {component}
             </p>
-            <div className="setAll" onClick={setAll}>
-                <span>set All</span>
-                <ion-icon name="chevron-forward-outline"></ion-icon>
-            </div>
+            
         </div>
 
         <div className="test_container_inputs">
             {
-                createTemperatureTags()
+                component === "Temperature" ?
+                    createTemperatureTags()
+                : (
+                    component === "Conditioned" ? "" : ''
+                )
             }
         </div>
+
+
 
     </Fragment>
   )
 }
 
-export default Temperature
+export default TestCategoryComponent

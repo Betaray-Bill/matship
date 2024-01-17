@@ -4,9 +4,12 @@ import { useDispatch } from 'react-redux'
 import { testStandardInfo } from '../../../features/uploadSlice'
 import * as XLSX from "xlsx";
 import Table from './TestComponents/Table';
-import Temperature from './ISO527/Components/Temperature';
+import Chart from './TestComponents/Chart';
+import TestCategoryComponent from './ISO527/Components/TestCategoryComponent';
+import ManualDatasetUpload from './ISO527/Components/ManualDatasetUpload';
 
 function ISO527({isClickedNext}) {
+  const [isProcessedDataClicked, setIsProcessedDataClicked] = useState(false)
   const [dynamicArray, setDynamicArray] = useState([]);
   const [formData, setFormData] = useState({
     testStandard:"ISO527",
@@ -19,7 +22,8 @@ function ISO527({isClickedNext}) {
     CrossHeadSpeed:[],
     x_axis:[],
     y_axis:[],
-    dataSetValue:[]
+    dataSetValue:[],
+    ManualDataSet:[]
   })
   const dispatch = useDispatch()
   const [numberOfDataSets, setNumberOfDataSets] = useState(0)
@@ -296,23 +300,27 @@ function ISO527({isClickedNext}) {
   const [nextClicked, setNextClicked] = useState(false)
   // CREATE FIELD FOR EACH SPECIMENS
   const createDynamicObject = (index) => ({
-    [index]:[[], []]
+    [index-1]:[[], []]
   }); //Create Dynamic Array 
   // upload Dataset to Redux and create a 
+
   const uploadDataset = (NumberOf_Specimens , numberOf_Rows) => {
-    // console.log(NumberOf_Specimens, numberOf_Rows)
+
     setNextClicked(true);
-    const obj =new Object;
-    for(let i=0; i<NumberOf_Specimens.length; i++){
-      let b={};
+    let mainArray = new Array()
+    //Create a array of Matrix when the 
+    for(let i=0; i<NumberOf_Specimens.length; i++){    
+      let newMatrix = new Array()
       for(let j=0; j<NumberOf_Specimens[i]; j++){
-        const newObject = createDynamicObject(j);;
-        b[j] =Object.assign(newObject)
+        newMatrix.push([])
+        newMatrix.push([]);
+        mainArray.push(newMatrix)
+        newMatrix = []
       }
-      obj[i] = b;
     }
-    // console.log(obj)
-    setDynamicArray(obj)
+    setFormData({...formData, ManualDataSet:mainArray})
+    console.log(formData)
+
   }
   
   // console.log(dynamicArray)
@@ -405,64 +413,33 @@ function ISO527({isClickedNext}) {
   }, [dynamicArray])
 
   // Create Upload Dataset Code;
-  const specimensInput = (index) => {
-    const InputTags = []
-    var j=1;
-    for(let i=0; i<noOfSpecimens[index]; i++){
-      InputTags.push(
-        <div className="upload_data_section">
-            {excelData.length > 0 && (
-              <div className="upload_data_table">
-                <h3>
-                  Specimen {j}
-                </h3>
-                {/* 
-                <table border="1">
-                  <thead>
-                    <tr>
-                      <th>{formData.x_axis[index]}</th>
-                      <th>{formData.y_axis[index]}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {excelData.map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        <td>
-                          <input
-                            type="number"
-                            value={dynamicArray[index][i][i][0][rowIndex]}
-                            // onPaste={(e) => handlePaste(e,rowIndex, 'x_axis', i, index)}
-                            // onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            value={dynamicArray[index][i][i][1][rowIndex]}
-                            // onPaste={(e) => handlePaste(e,rowIndex, 'y_axis', i, index)}
-                            // onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table> 
-                */}
-                <Table 
-                  sno={j} index={index} 
-                  y_axis={formData.y_axis[index]} 
-                  x_axis={formData.x_axis[index]}
-                  // sendToParent={}
-                  excelData={excelData}
-                />
-              </div>
-            )}
-        </div>
-      )
-      j=j+1;
-    }
-    return InputTags
-  }
+  // const specimensInput = (index) => {
+  //   const InputTags = []
+  //   var j=1;
+  //   for(let i=0; i<noOfSpecimens[index]; i++){
+  //     InputTags.push(
+  //       <div className="upload_data_section">
+  //           {excelData.length > 0 && (
+  //             <div className="upload_data_table">
+  //               <h3>
+  //                 Specimen {j}
+  //               </h3>
+  //               <Table 
+  //                 sno={j} index={index} 
+  //                 y_axis={formData.y_axis[index]} 
+  //                 x_axis={formData.x_axis[index]}
+  //                 ManualDataSet = {formData.ManualDataSet}
+  //                 excelData={excelData}
+  //                 NumberOf_Specimens={formData.NumberOf_Specimens}
+  //               />
+  //             </div>
+  //           )}
+  //       </div>
+  //     )
+  //     j=j+1;
+  //   }
+  //   return InputTags
+  // }
 
   const createUploadDataset = () => {
     const InputTags = []
@@ -470,18 +447,12 @@ function ISO527({isClickedNext}) {
       // console.log("Num",i);
       // console.log(noOfSpecimens[i])
       InputTags.push(
-          <div className="upload_data_wrapper">
-              <div className="upload_data_container">
-                <div className="upload_container_header">
-                  <h4>Upload Dataset {i+1} </h4>
-                </div>
-                <div className="upload_data_wrapper">
-                {
-                  specimensInput(i)
-                }
-                </div>
-              </div>
-          </div>
+          <ManualDatasetUpload 
+            DataSet={i} 
+            noOfSpecimens={formData.NumberOf_Specimens[i]}
+            y_axis={formData.y_axis[i]} 
+            x_axis={formData.x_axis[i]}
+          />
       )
     }
 
@@ -577,7 +548,9 @@ function ISO527({isClickedNext}) {
                     <div className="btn" onClick={createDataset}>
                       Create Datasets
                     </div>
-                    <div className="skip">
+                    <div className="skip" onClick={() => {
+                      setIsProcessedDataClicked(!isProcessedDataClicked)
+                    }}>
                       Skip To add Processed data <ion-icon name="arrow-forward-outline"></ion-icon>
                     </div>
                   </div>
@@ -593,9 +566,19 @@ function ISO527({isClickedNext}) {
               
               <>
                 <div className="test_container_box">
-                  <Temperature numberOfDataSets={numberOfDataSets} />
+                  <TestCategoryComponent 
+                    numberOfDataSets={numberOfDataSets} 
+                    type={"Number"} component={"Temperature"} 
+                    FormData={formData}
+                  />
                 </div>
               </>
+
+              {/* <>
+                <div className="test_container_box">
+                  <TestCategoryComponent numberOfDataSets={numberOfDataSets} type={"Dropdown"} component={"Conditioned"} />
+                </div>
+              </> */}
 
               <>
                 <div className="test_container_box">
@@ -670,6 +653,9 @@ function ISO527({isClickedNext}) {
           {
             createUploadDataset()
           }
+          <div onClick={() => {}}>
+            submit DataSheet
+          </div>
           </div>
         )
       }

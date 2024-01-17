@@ -1,58 +1,92 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import { testStandardInfo } from '../../../../features/uploadSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-function Table({ sno, x_axis, y_axis, index, excelData }) {
+function Table({ sendToParent ,sno, x_axis, y_axis,  index, plotClicked }) {
+    const [data, setData] = useState([{
+        dataset:0,
+        specimens:0,
+        x_axis:{
+            name:"",
+            units:"",
+            value:[]
+        },
+        y_axis:{
+            name:"",
+            units:"",
+            value:[]
+        }
+    }])
 
-
-    // const handlePaste = async(e, rowIndex, axis , i, index) => {
-    //     // const n = dynamicArray;
-    //     // console.log(dynamicArray)
-    //     // const clipboardData = e.clipboardData || window.clipboardData;
-    //     // const pastedData = clipboardData.getData('text').split('\n');
-    //     // const rows = pastedData.length
-    //     // console.log("Pasted")
-    //     // await handleUserInput(rows)
-    //     // pastedData.forEach((ind, inde) => {
-    //     //   console.table(index+1, i+1, axis, rowIndex+1, Number(ind))
-    //     //   if(axis === 'x_axis'){
-    //     //     console.log(ind)
-    //     //     insertOrUpdateAtIndexForPasting(n[index][i][i][0], inde, Number(ind))
-    //     //   }else{
-    //     //     insertOrUpdateAtIndexForPasting(n[index][i][i][1], inde, Number(ind))
-    //     //     console.log(ind)
-    //     //   }
-    //     //   console.log(n[index][i][i])
-    //     // })
-    //     // console.log(n)
-    //     // await setDynamicArray(n)
-    // };
-
+    const [x_axisValue, setX_axisValue] = useState([])
+    const [y_axisValue, setY_axisValue] = useState([])
 
     const [tableData, setTableData] = useState([
       ['Column 1', 'Column 2'], // Initial row
     ]);
 
-    const handlePaste = (event) => {
+    const handlePaste = (event) => {  
+      
       const pastedText = event.clipboardData.getData('text/plain');
-
       if (!pastedText) return;
-
       // Determine target column based on click position
       const targetColumn = event.target.cellIndex; // Get index of clicked cell
-        console.log(targetColumn, pastedText)
+      console.log(targetColumn, pastedText)
       // Split data into rows and columns, preserving empty columns
       const rows = pastedText
         .split('\n')
         .map((line) => line.trim())
         .filter((line) => line)
         .map((line) => line.split('\t'));
-        console.log(rows)
+        console.log("Rowssssss", rows)
+        let x=[], y=[]
+        for(let i=0; i<rows.length; i++)  {
+          console.log(rows[i][0])
+          x.push(rows[i][0])
+          y.push(rows[i][1])
+        }
+        setX_axisValue([...x_axisValue, x])
+        setY_axisValue([...y_axisValue, y])
+        console.log(x_axisValue)
+        setData([
+          {
+            dataset:index,
+            specimens:sno,
+            x_axis:{
+                name:x_axis,
+                units:"",
+                value:x
+            },
+            y_axis:{
+                name:y_axis,
+                units:"",
+                value:y
+            }
+          } 
+        ]);
       // Update table data, correctly placing values in target column
       setTableData((prevData) => prevData.concat(rows));
+
+
     };
+    console.log("engs", plotClicked)
+
+    if(plotClicked){
+      console.log("yteasssssssssss")
+    }
+    useEffect(() => {
+      if(plotClicked === true){
+        // if(x_axisValue.length >1){
+          sendToParent(data, index, sno)
+        }
+      // }
+    }, [plotClicked])
 
   return (
     <>
-    {/* Tabel {sno} */}
+    {/* {
+      NumberOf_Specimens
+    } */}
     <table onPaste={handlePaste}>
       <thead>
         <tr>
@@ -63,12 +97,16 @@ function Table({ sno, x_axis, y_axis, index, excelData }) {
       <tbody className='table_body'>
         {tableData.map((row, index) => (
           <tr key={index}>
-            <td>{row[0]}</td>
-            <td>{row[1]}</td>
+            <td><input type="number" name='X Axis' value={row[0]} id="" placeholder='Paste your data' /></td>
+            <td><input type="number" name='Y Axis' value={row[1]} id="" placeholder='Paste your data'/></td>
+            {/* <td>{row[1]}</td> */}
           </tr>
         ))}
       </tbody>
     </table>
+    {
+      plotClicked ? "Hiii" : "Noo"
+    }
     </>
   )
 }
@@ -76,40 +114,3 @@ function Table({ sno, x_axis, y_axis, index, excelData }) {
 export default Table
 
 
-
-
-
-
-        {/* <table border="1">
-                  <thead>
-                    <tr>
-                      <th>{x_axis[index]}</th>
-                      <th>{y_axis[index]}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {excelData.map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        <td>
-                          <input
-                            type="number"
-                            onChange={(e) => {
-                              console.log("sno", sno ,":", e.target.value)
-                            }}
-                            // value={dynamicArray[index][i][i][0][rowIndex]}
-                            // onPaste={(e) => handlePaste(e,rowIndex, 'x_axis', i, index)}
-                            // onChange={(e) => handleInputChange(e, rowIndex, 'x_axis', i, index)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="number"
-                            // value={dynamicArray[index][i][i][1][rowIndex]}
-                            // onPaste={(e) => handlePaste(e,rowIndex, 'y_axis', i, index)}
-                            // onChange={(e) => handleInputChange(e, rowIndex, 'y_axis', i, index)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table> */}
