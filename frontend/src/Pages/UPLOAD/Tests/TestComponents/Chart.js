@@ -34,13 +34,37 @@ function Chart({plotData, DataSet}) {
       // console.log(existingIndex)
       // setPlot(existingIndex)
       console.log(plotData)
-
-      // console.log(object)
   }
 
   useEffect(() => {
     dataForPlot()
   }, [plot])
+
+  const data = {
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: [{ x: 10, y: 65 }, { x: 25, y: 59 }, { x: 40, y: 80 }],
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 150, 255, 0.2)',
+      },
+      {
+        label: 'Dataset 2',
+        data: [{ x: 5, y: 28 }, { x: 15, y: 48 }, { x: 35, y: 40 }],
+        borderColor: 'green',
+        backgroundColor: 'rgba(0, 255, 0, 0.2)',
+      },
+      // ... other datasets
+    ],
+  };
+
+  const options = {
+  scales: {
+      x: {
+        type: 'linear', // Ensure x-axis treats labels as numerical values
+      },
+    },
+  };
   // const data = {
   //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   //   datasets: [
@@ -61,39 +85,38 @@ function Chart({plotData, DataSet}) {
   // };
   // console.log("Dat for plot", data)
 
-  const options = {
-    responsive: true,
-    interaction: {
-      mode: 'index',
-      intersect: false,
-    },
-    stacked: false,
-    plugins: {
-      title: {
-        display: true,
-        text: 'Chart.js Line Chart - Multi Axis',
-      },
-    },
-    scales: {
-      y: {
-        type: 'linear',
-        display: true,
-        position: 'left',
-      },
-      y1: {
-        type: 'linear',
-        display: true,
-        position: 'right',
-        grid: {
-          drawOnChartArea: false,
-        },
-      },
-    },
-  };
+  // const options = {
+  //   responsive: true,
+  //   interaction: {
+  //     mode: 'index',
+  //     intersect: false,
+  //   },
+  //   stacked: false,
+  //   plugins: {
+  //     title: {
+  //       display: true,
+  //       text: 'Chart.js Line Chart - Multi Axis',
+  //     },
+  //   },
+  //   scales: {
+  //     y: {
+  //       type: 'linear',
+  //       display: true,
+  //       position: 'left',
+  //     },
+  //     y1: {
+  //       type: 'linear',
+  //       display: true,
+  //       position: 'right',
+  //       grid: {
+  //         drawOnChartArea: false,
+  //       },
+  //     },
+  //   },
+  // };
   
-  const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+  // const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
   
-  // const data = {
   //   labels,
   //   datasets: [
   //     {
@@ -114,9 +137,9 @@ function Chart({plotData, DataSet}) {
   // };
   return (
     <div>
-
         <h3>Plot</h3>
         {/* <Line options={options} data={data} />; */}
+        {/* <Line data={data} opti  ons={options} /> */}
     </div>
   )
 }

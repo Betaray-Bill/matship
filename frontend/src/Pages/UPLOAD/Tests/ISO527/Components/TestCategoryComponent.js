@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useRef } from 'react'
 import { useState } from 'react';
 
-function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
+function TestCategoryComponent({numberOfDataSets,type, component}) {
     // Create Temperature Input Fields
+    const InputRef = useRef()
     const [temperature, setTemperature] = useState(Array(numberOfDataSets).fill(null));
     
     const createTemperatureTags = () => {
@@ -11,6 +12,7 @@ function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
         inputTags.push(
             <div key={i} className='test_data_box'>
                 <input className='temp_input'
+                    ref={InputRef}
                     key={i} type="number" onChange={(event) => {
                         setTemperature((prevInputValues) => {
                         const newInputValues = [...prevInputValues];
@@ -35,12 +37,10 @@ function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
 
     // Set All
     const setAll = () => {  
-        const filled = temperature.filter((t) => t!==null)
-        console.log(temperature[filled.length-1])
-        for(let i=filled.length; i<numberOfDataSets; i++){
+        for(let i=0; i<numberOfDataSets; i++){
             setTemperature((prevInputValues) => {
                 const newInputValues = [...prevInputValues];
-                newInputValues[i] = temperature[filled.length-1]
+                newInputValues[i] = temperature[0]
                 return newInputValues;
             });
         }
@@ -51,7 +51,7 @@ function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
         console.log(getInputTags.length)
         // updates the Temperature Input tag
         for(let i=0; i<temperature.length; i++){
-            getInputTags[i].value = temperature[i]
+            getInputTags[i].value = temperature[0]
         }
         console.log(temperature)
     }, [temperature])
@@ -61,18 +61,14 @@ function TestCategoryComponent({numberOfDataSets, formData, type, component}) {
 
         <div className="comp_header">
             <p>
-                <ion-icon name="add-outline"></ion-icon> {component}
+                <ion-icon name="add-outline"></ion-icon> {component} ''
             </p>
             
         </div>
 
         <div className="test_container_inputs">
             {
-                component === "Temperature" ?
-                    createTemperatureTags()
-                : (
-                    component === "Conditioned" ? "" : ''
-                )
+                type === "Number" ? createTemperatureTags() : ""
             }
         </div>
 

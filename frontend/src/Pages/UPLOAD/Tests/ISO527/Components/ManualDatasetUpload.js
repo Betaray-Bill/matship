@@ -60,7 +60,7 @@ function ManualDatasetUpload({DataSet, noOfSpecimens, x_axis, y_axis}) {
           j=j+1;
         }
         return InputTags
-    }
+    } 
     console.log(dataSetValue)
     useEffect(() => {
         console.log("NEww", dataSetValue)

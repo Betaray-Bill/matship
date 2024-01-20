@@ -7,6 +7,8 @@ import Table from './TestComponents/Table';
 import Chart from './TestComponents/Chart';
 import TestCategoryComponent from './ISO527/Components/TestCategoryComponent';
 import ManualDatasetUpload from './ISO527/Components/ManualDatasetUpload';
+import { units } from '../../../Units';
+import Reusable from './ISO527/Components/Reusable';
 
 function ISO527({isClickedNext}) {
   const [isProcessedDataClicked, setIsProcessedDataClicked] = useState(false)
@@ -40,50 +42,6 @@ function ISO527({isClickedNext}) {
 
   }, [formData.SpecimenType])
 
-  // To ALL
-  function toAll(test){
-    console.log("test", test)
-
-    if(test === "Temperature"){
-      console.log(temperature.length)
-      if(temperature.length == 0){
-        alert("Enter atleast one value")
-      }else{
-        console.log(temperature[temperature.length-1])
-        let s = temperature.length-1;
-        let lastValue = temperature[temperature.length-1];
-        console.log(lastValue, s)
-        for(let i=s; i<numberOfDataSets; i++){
-          setTemperature((prevInputValues) => {
-            const newInputValues = [...prevInputValues];
-            newInputValues[i] = lastValue
-            return newInputValues;
-          });
-        }
-        console.log(temperature)
-      }
-    }
-
-    // if(test == "Conditioned"){
-    //   console.log(conditioned.length)
-    //   if(conditioned.length == 0){
-    //     alert("Enter atleast one value")
-    //   }else{
-    //     console.log(conditioned[conditioned.length-1])
-    //     let s = conditioned.length-1;
-    //     let lastValue = conditioned[conditioned.length-1];
-    //     console.log(lastValue, s)
-    //     for(let i=s; i<numberOfDataSets; i++){
-    //       setConditioned((prevInputValues) => {
-    //         const newInputValues = [...prevInputValues];
-    //         newInputValues[i] = lastValue
-    //         return newInputValues;
-    //       });
-    //     }
-    //     console.log(conditioned)
-    //   }
-    // }
-  }
 
   // Add DataSheet
   const [isaddDataSheet, setIsAddDataSheet] = useState(false) 
@@ -94,6 +52,37 @@ function ISO527({isClickedNext}) {
       setIsAddDataSheet(true)
     }
   }
+
+  // Set ALL
+  const setAll = (type) => {  
+    if(type === "Number of Specimens" ){
+      if(noOfSpecimens[0] === null){
+        alert("Please Enter the first Value")
+      }else{
+        for(let i=0; i<numberOfDataSets; i++){
+          setNumberOfDataSets((prevInputValues) => {
+              const newInputValues = [...prevInputValues];
+              newInputValues[i] = numberOfDataSets[0]
+              return newInputValues;
+          });
+        }
+      }
+    }else if(type === "Conditioned"){
+      if(conditioned[0] === null){
+        alert("Please Enter the first Value")
+      }else{
+        for(let i=0; i<numberOfDataSets; i++){
+          setConditioned((prevInputValues) => {
+              const newInputValues = [...prevInputValues];
+              newInputValues[i] = conditioned[0]
+              return newInputValues;
+          });
+          console.log(conditioned)
+        }
+      }
+    }
+}
+
 
   const [isCreateClicked, setisCreateClicked] = useState(false);
 
@@ -131,9 +120,10 @@ function ISO527({isClickedNext}) {
     const inputTags = [];
     for (let i = 0; i < numberOfDataSets; i++) {
       inputTags.push(
-        <div key={i} className='test_data_box'>
+        <div key={i} className='test_data_box '>
             {/* <p>D{i+1}</p> */}
             <select 
+              className='conditionedInput'
               key={i} type="number" onChange={(event) => {
                 setConditioned((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
@@ -146,6 +136,12 @@ function ISO527({isClickedNext}) {
               <option value="DAM">DAM</option>
               <option value="RH50">RH50</option>
             </select>
+            {
+                    i == 0 ? 
+                    <div className="setAll" onClick={() => setAll("Conditioned")}>
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </div> : ""
+              }
         </div>
       );
     }
@@ -159,7 +155,7 @@ function ISO527({isClickedNext}) {
     for (let i = 0; i < numberOfDataSets; i++) {
       inputTags.push(
         <div key={i} className='test_data_box'>
-            <input 
+            <input  className='noOfSpecimens_Input'
               key={i} type="number" onChange={(event) => {
                 setNoOfSpecimens((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
@@ -168,6 +164,12 @@ function ISO527({isClickedNext}) {
                 });
               }} 
             />
+            {
+                    i == 0 ? 
+                    <div className="setAll" onClick={() => setAll("Number of Specimens")}>
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </div> : ""
+            }
         </div>
       );
     }
@@ -198,6 +200,17 @@ function ISO527({isClickedNext}) {
 
   // Create X Axis Fields
   const [x_axis, setX_axis] = useState([]);
+  const [x_axisUnits, setX_axisUnits] = useState([]);
+  const [allXUnits, setAllXUnits] = useState(units);
+  const getXUnits = (e) =>  {
+    console.log(units[e])
+    setX_axisUnits(units[e])
+  }
+  useEffect(() => {
+    const unitValues = Object.values(units).flat();
+    setAllXUnits(unitValues)
+    console.log(unitValues)
+  }, [x_axisUnits])
   const createX_axisTags = () => {
     const inputTags = [];
     for (let i = 0; i < numberOfDataSets; i++) {
@@ -205,18 +218,44 @@ function ISO527({isClickedNext}) {
         <div key={i} className='test_data_box'>
             {/* <p>D{i+1}</p> */}
             <select 
-              key={i} type="text" onChange={(event) => {
+                type="text" onChange={(event) => {
                 setX_axis((prevInputValues) => {
                   const newInputValues = [...prevInputValues];
                   newInputValues[i] = event.target.value
                   return newInputValues;
                 });
+
+                getXUnits(event.target.value)
               }} 
             >
               <option value=""></option>
-              <option value="Engineering Strain(%)">Engineering Strain(%)</option>
-              <option value="Engineering Stress(MPa)">Engineering Stress(MPa)</option>
+              <option value="Engineering Strain">Engineering Strain</option>
+              <option value="Engineering Stress">Engineering Stress</option>
             </select>
+
+            <select 
+               type="text"
+            >
+              <option value=""></option>
+              {
+                x_axisUnits.length === 0 ? allXUnits.map((val) => (
+                  <option value={val} key={val}>{val}</option>
+                )) : 
+                (
+                  x_axisUnits.map((val) => (
+                    <option value={val} key={val}>{val}</option>
+                  ))
+                )
+              }
+            </select>
+
+            {
+                    i == 0 ? 
+                    <div className="setAll">
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </div> : ""
+            }
+            
         </div>
       );
     }
@@ -225,6 +264,17 @@ function ISO527({isClickedNext}) {
 
   // Create X Axis Fields
   const [y_axis, setY_axis] = useState([]);
+  const [y_axisUnits, setY_axisUnits] = useState([]);
+  const [allYUnits, setAllYUnits] = useState(units);
+  const getYUnits = (e) =>  {
+    console.log(units[e])
+    setX_axisUnits(units[e])
+  }
+  useEffect(() => {
+    const unitValues = Object.values(units).flat();
+    setAllYUnits(unitValues)
+    console.log(unitValues)
+  }, [y_axisUnits])
   const createY_axisTags = () => {
     const inputTags = [];
     for (let i = 0; i < numberOfDataSets; i++) {
@@ -244,6 +294,27 @@ function ISO527({isClickedNext}) {
               <option value="Engineering Strain(%)">Engineering Strain(%)</option>
               <option value="Engineering Stress(MPa)">Engineering Stress(MPa)</option>
             </select>
+            <select 
+               type="text"
+            >
+              <option value=""></option>
+              {
+                y_axisUnits.length === 0 ? allYUnits.map((val) => (
+                  <option value={val} key={val}>{val}</option>
+                )) : 
+                (
+                  y_axisUnits.map((val) => (
+                    <option value={val} key={val}>{val}</option>
+                  ))
+                )
+              }
+            </select>
+            {
+                    i == 0 ? 
+                    <div className="setAll">
+                        <ion-icon name="chevron-forward-outline"></ion-icon>
+                    </div> : ""
+            }
         </div>
       );
     }
@@ -269,11 +340,24 @@ function ISO527({isClickedNext}) {
   },[ temperature])
 
   useEffect(() => {
-    setFormData({...formData, NumberOf_Specimens:noOfSpecimens})
+    // setFormData({...formData, NumberOf_Specimens:noOfSpecimens})
+    const getInputTags = document.getElementsByClassName("noOfSpecimens_Input")
+        console.log(getInputTags.length)
+        for(let i=0; i<temperature.length; i++){
+            getInputTags[i].value = noOfSpecimens[0]
+        }
+        console.log(noOfSpecimens)
   },[ noOfSpecimens])
-
+  
   useEffect(() => {
-    setFormData({...formData, conditioned:conditioned})
+    // setFormData({...formData, conditioned:conditioned})
+    const getInputTags = document.getElementsByClassName("conditionedInput")
+        console.log(getInputTags.length)
+        // updates the Temperature Input tag
+        for(let i=0; i<temperature.length; i++){
+            getInputTags[i].value = conditioned[0]
+        }
+        console.log(conditioned)
   },[ conditioned])
 
   useEffect(() => {
@@ -459,11 +543,15 @@ function ISO527({isClickedNext}) {
     return InputTags
   }
 
-  createUploadDataset()
+  createUploadDataset();
+
+  // const [temperature, setTemperature] = useState(Array(numberOfDataSets).fill(null));
+    
 
   
   return (
     <>
+
         <div className="test_container">
            <div className="test_header">
             <ion-icon name="add-outline"></ion-icon>
@@ -563,29 +651,20 @@ function ISO527({isClickedNext}) {
           isCreateClicked ? 
           (
             <div className="test_container">
-              
+              {/* TEMPERATURE */}
               <>
                 <div className="test_container_box">
                   <TestCategoryComponent 
                     numberOfDataSets={numberOfDataSets} 
                     type={"Number"} component={"Temperature"} 
-                    FormData={formData}
+                    data={2}
+
                   />
                 </div>
               </>
-
-              {/* <>
-                <div className="test_container_box">
-                  <TestCategoryComponent numberOfDataSets={numberOfDataSets} type={"Dropdown"} component={"Conditioned"} />
-                </div>
-              </> */}
-
               <>
                 <div className="test_container_box">
                   <p><ion-icon name="add-outline"></ion-icon> Conditioned</p>
-                  <div className="all" onClick={() => toAll("Conditioned")}>
-                    all
-                  </div>
                   <div className="test_container_inputs">
                     {isCreateClicked ? createConditionedTags() : ""}
                   </div>
