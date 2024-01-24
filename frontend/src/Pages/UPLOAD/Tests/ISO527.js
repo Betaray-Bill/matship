@@ -9,6 +9,9 @@ import TestCategoryComponent from './ISO527/Components/TestCategoryComponent';
 import ManualDatasetUpload from './ISO527/Components/ManualDatasetUpload';
 import { units } from '../../../Units';
 import Reusable from './ISO527/Components/Reusable';
+import ConditionedComponent from './ISO527/Components/ConditionedComponent';
+import NumberOfDataset from './ISO527/Components/NumberOfDataset';
+import Crosshead from './ISO527/Components/Crosshead';
 
 function ISO527({isClickedNext}) {
   const [isProcessedDataClicked, setIsProcessedDataClicked] = useState(false)
@@ -53,150 +56,7 @@ function ISO527({isClickedNext}) {
     }
   }
 
-  // Set ALL
-  const setAll = (type) => {  
-    if(type === "Number of Specimens" ){
-      if(noOfSpecimens[0] === null){
-        alert("Please Enter the first Value")
-      }else{
-        for(let i=0; i<numberOfDataSets; i++){
-          setNumberOfDataSets((prevInputValues) => {
-              const newInputValues = [...prevInputValues];
-              newInputValues[i] = numberOfDataSets[0]
-              return newInputValues;
-          });
-        }
-      }
-    }else if(type === "Conditioned"){
-      if(conditioned[0] === null){
-        alert("Please Enter the first Value")
-      }else{
-        for(let i=0; i<numberOfDataSets; i++){
-          setConditioned((prevInputValues) => {
-              const newInputValues = [...prevInputValues];
-              newInputValues[i] = conditioned[0]
-              return newInputValues;
-          });
-          console.log(conditioned)
-        }
-      }
-    }
-}
-
-
   const [isCreateClicked, setisCreateClicked] = useState(false);
-
-  // Create Temperature Input Fields
-  const [temperature, setTemperature] = useState([]);
- 
-  const createTemperatureTags = () => {
-    const inputTags = [];
-    for (let i = 0; i < numberOfDataSets; i++) {
-      inputTags.push(
-        <div key={i} className='test_data_box'>
-            {/* <p>D{i+1}</p> */}
-            <input 
-              key={i} type="number" onChange={(event) => {
-                setTemperature((prevInputValues) => {
-                  const newInputValues = [...prevInputValues];
-                  newInputValues[i] = Number(event.target.value)
-                  return newInputValues;
-                });
-              }} 
-            />
-        </div>
-      );
-    }
-    return inputTags;
-  };
-  useEffect(() => {
-    console.log("ama da")
-  }, [temperature]  )
-
-
-  // Create Conditioned Input Fields
-  const [conditioned, setConditioned] = useState([]);
-  const createConditionedTags = () => {
-    const inputTags = [];
-    for (let i = 0; i < numberOfDataSets; i++) {
-      inputTags.push(
-        <div key={i} className='test_data_box '>
-            {/* <p>D{i+1}</p> */}
-            <select 
-              className='conditionedInput'
-              key={i} type="number" onChange={(event) => {
-                setConditioned((prevInputValues) => {
-                  const newInputValues = [...prevInputValues];
-                  newInputValues[i] = event.target.value
-                  return newInputValues;
-                });
-              }} 
-            >
-              <option value=""></option>
-              <option value="DAM">DAM</option>
-              <option value="RH50">RH50</option>
-            </select>
-            {
-                    i == 0 ? 
-                    <div className="setAll" onClick={() => setAll("Conditioned")}>
-                        <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </div> : ""
-              }
-        </div>
-      );
-    }
-    return inputTags;
-  }
-
-  // Create No of Specimens
-  const [noOfSpecimens, setNoOfSpecimens] = useState([])
-  const  createNoOfSpecimensTags = () => {
-    const inputTags = [];
-    for (let i = 0; i < numberOfDataSets; i++) {
-      inputTags.push(
-        <div key={i} className='test_data_box'>
-            <input  className='noOfSpecimens_Input'
-              key={i} type="number" onChange={(event) => {
-                setNoOfSpecimens((prevInputValues) => {
-                  const newInputValues = [...prevInputValues];
-                  newInputValues[i] = Number(event.target.value);
-                  return newInputValues;
-                });
-              }} 
-            />
-            {
-                    i == 0 ? 
-                    <div className="setAll" onClick={() => setAll("Number of Specimens")}>
-                        <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </div> : ""
-            }
-        </div>
-      );
-    }
-    return inputTags;
-  }
-
-  // Cross Head
-  const [crossHeads, setCrossHeads] = useState([]);
-  const createCrossheadTags = () => {
-    const inputTags = [];
-    for (let i = 0; i < numberOfDataSets; i++) {
-      inputTags.push(
-        <div key={i} className='test_data_box'>
-            <input 
-              key={i} type="number" onChange={(event) => {
-                setCrossHeads((prevInputValues) => {
-                  const newInputValues = [...prevInputValues];
-                  newInputValues[i] =event.target.value
-                  return newInputValues;
-                });
-              }} 
-            />
-        </div>
-      );
-    }
-    return inputTags;
-  }
 
   // Create X Axis Fields
   const [x_axis, setX_axis] = useState([]);
@@ -334,36 +194,6 @@ function ISO527({isClickedNext}) {
     await dispatch(testStandardInfo(formData))
   }
 
-
-  useEffect(() => {
-    setFormData({...formData, temp:temperature})
-  },[ temperature])
-
-  useEffect(() => {
-    // setFormData({...formData, NumberOf_Specimens:noOfSpecimens})
-    const getInputTags = document.getElementsByClassName("noOfSpecimens_Input")
-        console.log(getInputTags.length)
-        for(let i=0; i<temperature.length; i++){
-            getInputTags[i].value = noOfSpecimens[0]
-        }
-        console.log(noOfSpecimens)
-  },[ noOfSpecimens])
-  
-  useEffect(() => {
-    // setFormData({...formData, conditioned:conditioned})
-    const getInputTags = document.getElementsByClassName("conditionedInput")
-        console.log(getInputTags.length)
-        // updates the Temperature Input tag
-        for(let i=0; i<temperature.length; i++){
-            getInputTags[i].value = conditioned[0]
-        }
-        console.log(conditioned)
-  },[ conditioned])
-
-  useEffect(() => {
-    setFormData({...formData, CrossHeadSpeed:crossHeads})
-  },[crossHeads])
-
   useEffect(() => {
     setFormData({...formData, x_axis:x_axis})
   },[ x_axis])
@@ -414,73 +244,6 @@ function ISO527({isClickedNext}) {
   const [tableData, setTableData] = useState({});
 
   // console.log("Talbe", tableData)
-  const [arrayData, setArrayData] = useState([]);
-
-  function insertOrUpdateAtIndex(myArray, indexToInsert, newValue) {
-    if (indexToInsert >= 0 && indexToInsert < myArray.length) {
-      myArray.splice(indexToInsert, 1, newValue);
-      console.log(myArray)
-    } else {
-      myArray.splice(myArray.length, 0, newValue);
-    }
-  }
-
-  const  handleInputChange = (e, rowIndex, axis, i, index) => {
-    // console.log(index+1, i+1, axis, rowIndex+1, e)
-      const n = dynamicArray;
-      console.log(dynamicArray)
-      if(axis === 'x_axis'){
-        insertOrUpdateAtIndex(n[index][i][i][0], rowIndex,Number(e.target.value))
-      }else{
-        insertOrUpdateAtIndex(n[index][i][i][1], rowIndex,Number(e.target.value))
-      }
-    // console.log(n)
-    setDynamicArray(n)
-    console.log(n)
-    console.log(arrayData)
-  };
-
-  const handleUserInput = (numRows) => {
-    setUserInput(numRows);
-    const newData = [];
-    for (let i = 0; i < numRows; i++) {
-      newData.push({ x_axis: '', y_axis: '' });
-    }
-    setExcelData(newData);
-  };
-
-  // paste
-  function insertOrUpdateAtIndexForPasting(myArray, indexToInsert, newValue) {
-    if (indexToInsert >= 0 && indexToInsert < myArray.length) {
-      myArray.splice(indexToInsert, 1, newValue);
-      console.log(myArray)
-    } else {
-      myArray.splice(myArray.length, 0, newValue);
-    }
-  }
-
-  const handlePaste = async(e, rowIndex, axis , i, index) => {
-    const n = dynamicArray;
-    console.log(dynamicArray)
-    const clipboardData = e.clipboardData || window.clipboardData;
-    const pastedData = clipboardData.getData('text').split('\n');
-    const rows = pastedData.length
-    console.log("Pasted")
-    await handleUserInput(rows)
-    pastedData.forEach((ind, inde) => {
-      console.table(index+1, i+1, axis, rowIndex+1, Number(ind))
-      if(axis === 'x_axis'){
-        console.log(ind)
-        insertOrUpdateAtIndexForPasting(n[index][i][i][0], inde, Number(ind))
-      }else{
-        insertOrUpdateAtIndexForPasting(n[index][i][i][1], inde, Number(ind))
-        console.log(ind)
-      }
-      console.log(n[index][i][i])
-    })
-    console.log(n)
-    await setDynamicArray(n)
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -496,40 +259,10 @@ function ISO527({isClickedNext}) {
     setDynamicArray(dynamicArray)
   }, [dynamicArray])
 
-  // Create Upload Dataset Code;
-  // const specimensInput = (index) => {
-  //   const InputTags = []
-  //   var j=1;
-  //   for(let i=0; i<noOfSpecimens[index]; i++){
-  //     InputTags.push(
-  //       <div className="upload_data_section">
-  //           {excelData.length > 0 && (
-  //             <div className="upload_data_table">
-  //               <h3>
-  //                 Specimen {j}
-  //               </h3>
-  //               <Table 
-  //                 sno={j} index={index} 
-  //                 y_axis={formData.y_axis[index]} 
-  //                 x_axis={formData.x_axis[index]}
-  //                 ManualDataSet = {formData.ManualDataSet}
-  //                 excelData={excelData}
-  //                 NumberOf_Specimens={formData.NumberOf_Specimens}
-  //               />
-  //             </div>
-  //           )}
-  //       </div>
-  //     )
-  //     j=j+1;
-  //   }
-  //   return InputTags
-  // }
 
   const createUploadDataset = () => {
     const InputTags = []
     for(let i=0; i<numberOfDataSets; i++){
-      // console.log("Num",i);
-      // console.log(noOfSpecimens[i])
       InputTags.push(
           <ManualDatasetUpload 
             DataSet={i} 
@@ -544,11 +277,6 @@ function ISO527({isClickedNext}) {
   }
 
   createUploadDataset();
-
-  // const [temperature, setTemperature] = useState(Array(numberOfDataSets).fill(null));
-    
-
-  
   return (
     <>
 
@@ -657,37 +385,44 @@ function ISO527({isClickedNext}) {
                   <TestCategoryComponent 
                     numberOfDataSets={numberOfDataSets} 
                     type={"Number"} component={"Temperature"} 
-                    data={2}
-
+                    FormData={formData}
                   />
                 </div>
               </>
+              
+              {/* CONDITIONED */}
               <>
                 <div className="test_container_box">
-                  <p><ion-icon name="add-outline"></ion-icon> Conditioned</p>
-                  <div className="test_container_inputs">
-                    {isCreateClicked ? createConditionedTags() : ""}
-                  </div>
+                  <ConditionedComponent
+                    numberOfDataSets={numberOfDataSets} 
+                    type={"Number"} component={"Conditioned"} 
+                    FormData={formData}
+                  />
                 </div>
               </>
 
+              {/* Number of Specimens */}
               <>
                 <div className="test_container_box">
-                  <p><ion-icon name="add-outline"></ion-icon>Number of Specimens / Dataset </p>
-                  <div className="test_container_inputs">
-                    {isCreateClicked ? createNoOfSpecimensTags() : ""}
-                  </div>
+                  <NumberOfDataset
+                    numberOfDataSets={numberOfDataSets} 
+                    type={"Number"} component={"Number of Specimens / Dataset "} 
+                    FormData={formData}
+                  />
                 </div>
               </>
 
+              {/* Crosshead Speed (mm/min) */}
               <>
                 <div className="test_container_box">
-                  <p><ion-icon name="add-outline"></ion-icon>Crosshead Speed (mm/min)</p>
-                  <div className="test_container_inputs">
-                    {isCreateClicked ? createCrossheadTags() : ""}
-                  </div>
+                  <Crosshead
+                    numberOfDataSets={numberOfDataSets} 
+                    type={"Number"} component={"Crosshead Speed (mm/min)"} 
+                    FormData={formData}
+                  />
                 </div>
               </>
+
 
               <>
                 <div className="test_container_box">
@@ -709,17 +444,11 @@ function ISO527({isClickedNext}) {
             </div>
           ):""
         }
-        <form onSubmit={handleSubmit}>
-          {/* <label>
-            Number of Rows:
-            <input type="number" value={excelData.length} onChange={(e) => handleUserInput(e.target.value)} />
-          </label> */}
-          <br />
-          {/* <button type='submit'>submit</button> */}
-        </form>
+        {/* <form onSubmit={handleSubmit}>
+        </form> */}
 
         <div className="next">
-            <div className="btn" onClick={() => {uploadDataset(formData.NumberOf_Specimens, userInput); handleUserInput(1)}}>
+            <div className="btn" onClick={() => {uploadDataset(formData.NumberOf_Specimens, userInput)}}>
              Next
             </div>
         </div>
@@ -729,12 +458,12 @@ function ISO527({isClickedNext}) {
       {
          nextClicked && (
           <div style={{display:"grid", placeContent:"center"}}>
-          {
-            createUploadDataset()
-          }
-          <div onClick={() => {}}>
-            submit DataSheet
-          </div>
+            {
+              createUploadDataset()
+            }
+            <div onClick={() => {}}>
+              submit DataSheet
+            </div>
           </div>
         )
       }

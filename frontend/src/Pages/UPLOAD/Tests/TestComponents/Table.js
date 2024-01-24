@@ -69,7 +69,7 @@ function Table({ sendToParent ,sno, x_axis, y_axis,  index, plotClicked }) {
 
 
     };
-    console.log("engs", plotClicked)
+    console.log("engs", data  )
 
     if(plotClicked){
       console.log("yteasssssssssss")
