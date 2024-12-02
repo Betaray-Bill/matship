@@ -23,7 +23,7 @@
     "express-async-handler": "^1.2.0",
     "faker": "^6.6.6",
     "jsonwebtoken": "^9.0.2",
-    "mongodb": "4.0",
+    "mongodb": "4.17",
     "mongoose": "^7.5.2",
     "nodemon": "^3.0.1",
     "react-chartjs-2": "^5.2.0",
